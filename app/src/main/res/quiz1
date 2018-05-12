@@ -1,0 +1,236 @@
+1
+What is a mobile application Activity?
+A visual representation of a screen displayed to a user supported by Java code
+A function of a mobile application
+An interactive element which attaches to a sensor
+A content provider
+A visual representation of a screen displayed to a user supported by Java code
+
+2
+A Mobile Application is
+A form of mobile device
+A collection of related activities
+A system of interconnected screens
+A way to get a lot of money very quickly
+A collection of related activities
+
+3
+What is an Intent in the Android Programming Language?
+A reason for an application to work properly
+A message passed from one activity to another to launch another activity
+A method of interaction between mobile sensors
+A method of communication between activities
+A message passed from one activity to another to launch another activity
+
+4
+What is a Broadcast Receiver?
+A radio receiver attached to the mobile device
+A type of intent which can interrupt activities
+An Android class which handles broadcast intents
+An intent which must be handled somehow
+An Android class which handles broadcast intents
+
+5
+What is a Layout Resource?
+A Java code file which provides a text based representation of a screen
+A resource file which contains all of the functions of an activity
+An image based representation of an activity
+A file written in xml which describes the layout of an activity
+A file written in xml which describes the layout of an activity
+
+6
+Where can the non-code files required by an Application be found?
+Under the couch
+In the resources directory named res
+In the non-Java directories such as layout, strings, colors
+In the bin directory of the main project folder
+In the resources directory named res
+
+7
+Mobile Application services do not have a
+An internet or network connection
+A User Interface
+An associated supporting Jave file
+A reason to exist
+A User Interface
+
+8
+A Manifest file contains
+A list of all of the requirements of the app
+Java code describing the application name, ID, components of the app, permissions, hardware and software features the app requires
+An xml representation of the applications requirements
+The application name, ID, components of the app, permissions, and hardware and software features the app requires
+Java code describing the application name, ID, components of the app, permissions, hardware and software features the app requires
+
+9
+Name the two most common languages which are used to create Modern Mobile Applications?
+Java and Kaitlin
+C++ and Ruby
+Java and Swift
+Symbian and RIMM
+Java and Swift
+
+10
+What are the two most commonly used compiled mobile application file extensions?
+avi and mp3
+sis and rimm
+apk and ipa
+doc and docx
+apk and ipa
+
+11
+In Android, what is a widget?
+A summary view of an applications most important data and functions
+The basic building block for user interface components
+Visual representation of an activity
+An Android class is designed to store and manage UI-related data in a lifecycle conscious way
+A summary view of an applications most important data and functions
+
+12
+What is a Fragment?
+The structure for a user interface in your application
+A system which manages access to a central repository of data
+A system which measures motion, orientation, and various environmental conditions
+A representation of a behaviour or portion of an activity
+A representation of a behaviour or portion of an activity
+
+13
+The five stages of Mobile Development Systems Development Life Cycle are:
+inception, design, development, stabilization, deployment
+forming, storming, norming, performing, adjourning
+feasibility studies, proof of concept, requirements analysis, system architecture, usability testing, design and code review
+initiation, planning, execution, and closure
+inception, design, development, stabilization, deployment
+
+14
+What is a context in android ?
+The state of an activity in a Class
+The state of a layout based on an Intent
+What'chu talkin' 'bout, Willis?
+The current state of the application
+The current state of the application
+
+15
+In general, how do you store data in an Android Application?
+As a QR code
+In a text file in the resources directory
+Data is stored on the device by using the SharedPreferences permissions
+In a mySQL server
+Data is stored on the device by using the SharedPreferences permissions
+
+16
+How do you store heavy structured data in android?
+In a text file in the resources directory
+In a mySQL server
+As an SQLlite database
+
+17
+How many orientations does android support?
+2 - Horizontal and Vertical
+7 - Up, down, left left, a, right, down
+6 - Top, Bottom, Up, Down, Strange, Charm
+4 - landscape, portrait, sensor and No orientation
+4 - landscape, portrait, sensor and No orientation
+
+18
+Android is based on which language.
+C#
+Kotlin
+Java
+Swift
+Java
+
+19
+15. Using a content provider, which of the following operations are able to perform?
+create, read, update, delete
+create, read
+create, read, update
+create, read, delete
+create, read, update, delete
+
+20
+What language do you use to create user interfaces in Android?
+Android Studio
+java and XML
+java and SQL
+C#
+java and XML
+
+21
+19. Which of the following are different storage methods available in Android?
+shared preferences, internal storage, external storage, SQLite databases, Intermediate storage
+shared preferences, internal storage, external storage
+shared preferences, internal storage, external storage, SQLite databases
+shared preferences, internal storage, external storage, SQLite databases, Network Connection, Intermediate storage
+shared preferences, internal storage, external storage, SQLite databases, Intermediate storage
+
+22
+ADB stands for
+Android Debug Bridge
+Application Debug Bridge
+Android data bridge
+Application data bridge
+Android Debug Bridge
+
+23
+Which of the following holds Java source code for the application?
+res/
+assets/
+src/
+bin/
+src/
+
+24
+Which of the following don’t have any UI component and run as a background process?
+services
+simulator
+emulator
+activity
+services
+
+25
+What file is the auto generated file which contains resource IDs for all the resources in your res/ directory?
+String.xml
+Main.java
+Menu.xml
+R.java
+R.java
+
+26
+There are four Java classes related to the use of sensors on the Android platform. They are:
+BroadcastReciever, OrientationManager, NetworkManager, WirelessManager
+IncomingMessage, Intent, R, LayoutManager
+
+Sensor, SensorManager, SensorEvent, SensorEventListener
+Sensor, SensorManager, SensorEvent, SensorEventListener
+
+27
+Android Intents can be used to start an application. Under what conditions will an application crash based on an Intent?
+An Android application cannot be crashed due to an Intent
+An Android Intent is sent to the application which is unrecognized and cannot be resolved
+The Intent received is handled by an external activity
+A great programmer does not have to worry about these things
+An Android Intent is sent to the application which is unrecognized and cannot be resolved
+
+28
+What is required to successfully process an orientation change in Android?
+Ensure the OrientationManager is working correctly
+For each activity ensure multiple views exist
+Verify that the activity view id provided by the android:id attribute is valid for the view
+Shake the phone repeatedly if it doesnt work the first time
+Verify that the activity view id provided by the android:id attribute is valid for the view
+
+29
+In Mobile Development an activity without a User Interface is known as a:
+Sensor
+Broadcast Intent
+Abstract Activity
+Blank Canvas
+Abstract Activity
+
+30 The six stages of Mobile Development Systems Development Life Cycle are:
+inception, design, development, stabilization, deployment, employment
+forming, storming, norming, performing, adjourning, mourning
+feasibility studies, proof of concept, requirements analysis, system architecture, usability testing, design and code review
+initiation, planning, execution, closure, exposure, foreclosure
+feasibility studies, proof of concept, requirements analysis, system architecture, usability testing, design and code review
