@@ -1,4 +1,4 @@
-package net.qrolling.kisscard;
+package net.qrolling.kisscard.activities;
 
 /**
  * Created by Quy Nguyen (nguyenledinhquy@gmail.com | https://github.com/quynguyenhcm) on 18/05/18.
@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.widget.RatingBar;
 import android.widget.TextView;
+
+import net.qrolling.kisscard.R;
 
 
 public class ResultActivity extends Activity {
