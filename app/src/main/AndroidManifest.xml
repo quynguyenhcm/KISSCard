@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.it617.myquizapplication">
+    package="net.qrolling.kisscard">
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
-            android:name="com.it617.myquizapplication.QuizActivity"
-            android:label="@string/app_name" >
+            android:name="net.qrolling.kisscard.KissCardMainActivity"
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -17,8 +17,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.it617.myquizapplication.ResultActivity"
-            android:label="@string/title_activity_result" >
-        </activity>
+            android:name="net.qrolling.kisscard.ResultActivity"
+            android:label="@string/title_activity_result" />
+        <activity
+            android:name="net.qrolling.kisscard.CardListActivity"
+            android:label="@string/title_activity_main" />
+        <activity
+            android:name="net.qrolling.kisscard.CardView"
+            android:label="@string/title_activity_card_view"></activity>
+
     </application>
 </manifest>
