@@ -33,6 +33,14 @@ public class KissCardMainActivity extends Activity {
                 startActivity(i);
             }
         });
+
+        btnNewCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(KissCardMainActivity.this, AddCardActivity.class);
+                startActivity(i);
+            }
+        });
     }
 
 

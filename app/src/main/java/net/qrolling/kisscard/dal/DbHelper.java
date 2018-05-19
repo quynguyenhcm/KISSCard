@@ -105,6 +105,11 @@ public class DbHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
+    public void insertCard(String term, String defintion) {
+        dbase = this.getWritableDatabase();
+        dbase.execSQL("INSERT INTO " + TABLE_KISS_CARDS + "( " + KEY_TERM + "," + KEY_DEFINITION + ")VALUES('" + term + "','" + defintion + "')");
+    }
+
     public List<KissCard> getAllTerms() {
         List<KissCard> cardList = new ArrayList<>();
         Cursor cursor = getAllRawCards();
