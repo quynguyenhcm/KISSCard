@@ -17,15 +17,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.ResultActivity"
-            android:label="@string/title_activity_result" />
-        <activity
             android:name=".activities.CardListActivity"
             android:label="@string/title_activity_main" />
         <activity
-            android:name=".activities.CardView"
+            android:name=".activities.ViewCardActivity"
             android:label="@string/title_activity_card_view" />
-        <activity android:name=".activities.AddCardActivity"></activity>
+        <activity android:name=".activities.AddCardActivity" />
+        <activity android:name=".activities.EditCardActivity"></activity>
     </application>
 
 </manifest>

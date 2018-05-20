@@ -15,25 +15,30 @@ import net.qrolling.kisscard.R;
 
 public class KissCardMainActivity extends Activity {
 
-    Button btnStudy;
-    Button btnNewCard;
+    private Button btnStudy;
+    private Button btnNewCard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_kiss_card_main);
+        initialiseUIComponents();
+    }
 
-        btnStudy = findViewById(R.id.study);
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.activity_kiss_card, menu);
+        return true;
+    }
+
+    private void initialiseUIComponents() {
+        initialiseButtonStudy();
+        initialiseButtonAdd();
+    }
+
+    private void initialiseButtonAdd() {
         btnNewCard = findViewById(R.id.newcard);
-
-        btnStudy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(KissCardMainActivity.this, CardListActivity.class);
-                startActivity(i);
-            }
-        });
-
         btnNewCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -43,12 +48,14 @@ public class KissCardMainActivity extends Activity {
         });
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.activity_quiz, menu);
-        return true;
+    private void initialiseButtonStudy() {
+        btnStudy = findViewById(R.id.study);
+        btnStudy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(KissCardMainActivity.this, CardListActivity.class);
+                startActivity(i);
+            }
+        });
     }
-
 }

@@ -18,7 +18,8 @@ import net.qrolling.kisscard.dto.KissCursorCardAdaptor;
 
 public class CardListActivity extends ListActivity {
 
-    KissCursorCardAdaptor kissCursorCardAdaptor;
+    private KissCursorCardAdaptor kissCursorCardAdaptor;
+    private final DbHelper db = new DbHelper(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,22 +29,22 @@ public class CardListActivity extends ListActivity {
     }
 
     private void initWordList() {
-        DbHelper db = new DbHelper(this);
-        Cursor kissCardCursor = db.getAllRawCards();
+        Cursor kissCardCursor = db.getCardCursor();
         kissCursorCardAdaptor = new KissCursorCardAdaptor(this, kissCardCursor);
         setListAdapter(kissCursorCardAdaptor);
     }
 
-    public void onListItemClick(ListView parent, View v, int position, long id) {
-        Cursor kissCard = (SQLiteCursor) parent.getItemAtPosition(position);
-        viewCard(kissCard);
+    public void onListItemClick(ListView cardList, View v, int position, long id) {
+        Cursor kissCard = (SQLiteCursor) cardList.getItemAtPosition(position);
+        Intent intent = new Intent(CardListActivity.this, ViewCardActivity.class);
+        populateKissCardToIntent(kissCard, intent);
+        startActivity(intent);
     }
 
-    private void viewCard(Cursor kissCard) {
-        Intent intent = new Intent(CardListActivity.this, CardView.class);
+
+    private void populateKissCardToIntent(Cursor kissCard, Intent intent) {
         intent.putExtra("id", kissCard.getInt(0));
         intent.putExtra("definition", kissCard.getString(2));
         intent.putExtra("term", kissCard.getString(1));
-        startActivity(intent);
     }
 }

@@ -10,38 +10,46 @@ import android.widget.EditText;
 import net.qrolling.kisscard.R;
 import net.qrolling.kisscard.dal.DbHelper;
 
-public class AddCardActivity extends Activity implements View.OnClickListener {
+public class EditCardActivity extends Activity implements View.OnClickListener {
     private final DbHelper db = new DbHelper(this);
     private EditText txtTerm, txtDefinition;
-    private Button btnSave, btnShow;
+    private Button btnUpdate;
+    private String definition;
+    private String term;
+    private Integer id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_card);
+        setContentView(R.layout.activity_edit_card);
         initialiseUIComponent();
+        populateCard();
         registerEventHandler();
+    }
+
+    private void populateCard() {
+        definition = (String) getIntent().getExtras().get("definition");
+        txtDefinition.setText(definition);
+        id = (Integer) getIntent().getExtras().get("id");
+        term = (String) getIntent().getExtras().get("term");
+        txtTerm.setText(term);
     }
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.btnSave) {
-            saveNewTerm();
-        } else if (v.getId() == R.id.btnShow) {
-            showCardList();
+        if (v.getId() == R.id.btnUpdate) {
+            updateCard();
         }
     }
 
     private void registerEventHandler() {
-        btnSave.setOnClickListener(this);
-        btnShow.setOnClickListener(this);
+        btnUpdate.setOnClickListener(this);
     }
 
     private void initialiseUIComponent() {
         txtTerm = findViewById(R.id.cardTerm);
         txtDefinition = findViewById(R.id.cardDefinition);
-        btnSave = findViewById(R.id.btnSave);
-        btnShow = findViewById(R.id.btnShow);
+        btnUpdate = findViewById(R.id.btnUpdate);
     }
 
 
@@ -50,7 +58,8 @@ public class AddCardActivity extends Activity implements View.OnClickListener {
         startActivity(intent);
     }
 
-    private void saveNewTerm() {
-        db.insertCard(txtTerm.getText().toString(), txtDefinition.getText().toString());
+    private void updateCard() {
+        db.updateCard(id, txtTerm.getText().toString(), txtDefinition.getText().toString());
+        showCardList();
     }
 }

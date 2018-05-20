@@ -12,12 +12,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import net.qrolling.kisscard.dto.KissCard;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-
 public class DbHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 2;
     // Database Name
@@ -26,11 +20,11 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String TABLE_KISS_CARDS = "flashcards";
 
     // Kiss Card Table Columns names
-    public static final String KEY_ID = "_id";
+    public static final String KEY_ID = "_id";//Should be "_id" so that the column can used with Cursor, otherwise we can use alias to "_id"
     public static final String KEY_TERM = "term";
     public static final String KEY_DEFINITION = "definition";
 
-    private SQLiteDatabase dbase;
+    private SQLiteDatabase db;
 
     public DbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -38,47 +32,15 @@ public class DbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        dbase = db;
+        this.db = db;
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_KISS_CARDS);
         String sql = "CREATE TABLE IF NOT EXISTS " + TABLE_KISS_CARDS + " ( "
                 + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + KEY_TERM
                 + " TEXT, " + KEY_DEFINITION + " TEXT)";
         db.execSQL(sql);
-        addQuestions();
-        //db.close();
+        addSampleCards();
     }
 
-    private void addAllQuestions() {
-
-        KissCard kissCard;
-
-    }
-
-    public static String readRawTextFile(Context ctx, int resId) {
-        InputStream inputStream = ctx.getResources().openRawResource(resId);
-
-        InputStreamReader inputreader = new InputStreamReader(inputStream);
-        BufferedReader buffreader = new BufferedReader(inputreader);
-        String line;
-        StringBuilder text = new StringBuilder();
-
-        try {
-            while ((line = buffreader.readLine()) != null) {
-                text.append(line);
-                text.append('\n');
-            }
-        } catch (Exception e) {
-            return null;
-        }
-        return text.toString();
-    }
-
-    private void addQuestions() {
-        KissCard q1 = new KissCard("Banana", "A kind of fruit that is good for health");
-        this.addQuestion(q1);
-        KissCard q2 = new KissCard("Orange", "A kind of fruit that is rich of Vitamin C");
-        this.addQuestion(q2);
-    }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldV, int newV) {
@@ -88,51 +50,46 @@ public class DbHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    // Adding new question
-    public void addQuestion(KissCard quest) {
-        //SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(KEY_TERM, quest.getTerm());
-        values.put(KEY_DEFINITION, quest.getDefinition());
-        // Inserting Row
-        dbase.insert(TABLE_KISS_CARDS, null, values);
+    // Adding new card
+    public void addKissCard(KissCard card) {
+        insertCard(card.getTerm(), card.getDefinition());
     }
 
-    public Cursor getAllRawCards() {
+    public Cursor getCardCursor() {
         String selectQuery = "SELECT  * FROM " + TABLE_KISS_CARDS;
-        dbase = this.getReadableDatabase();
-        Cursor cursor = dbase.rawQuery(selectQuery, null);
+        db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
         return cursor;
     }
 
     public void insertCard(String term, String defintion) {
-        dbase = this.getWritableDatabase();
-        dbase.execSQL("INSERT INTO " + TABLE_KISS_CARDS + "( " + KEY_TERM + "," + KEY_DEFINITION + ")VALUES('" + term + "','" + defintion + "')");
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(KEY_TERM, term);
+        values.put(KEY_DEFINITION, defintion);
+        db.insert(TABLE_KISS_CARDS, null, values);
     }
 
-    public List<KissCard> getAllTerms() {
-        List<KissCard> cardList = new ArrayList<>();
-        Cursor cursor = getAllRawCards();
-        // looping through all rows and adding to list
-        if (cursor.moveToFirst()) {
-            do {
-                KissCard quest = new KissCard();
-                quest.setID(cursor.getInt(0));
-                quest.setTerm(cursor.getString(1));
-                quest.setDefinition(cursor.getString(2));
-                cardList.add(quest);
-            } while (cursor.moveToNext());
-        }
-        // return quest list
-        return cardList;
+    public void updateCard(int id, String term, String defintion) {
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(KEY_TERM, term);
+        values.put(KEY_DEFINITION, defintion);
+        String where = KEY_ID + "=?";
+        db.update(TABLE_KISS_CARDS, values, where, new String[]{String.valueOf(id)});
     }
 
-    public int rowcount() {
-        int row = 0;
-        String selectQuery = "SELECT  * FROM " + TABLE_KISS_CARDS;
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-        row = cursor.getCount();
-        return row;
+    public void deleteCard(int id) {
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        String where = KEY_ID + "=?";
+        db.delete(TABLE_KISS_CARDS, where, new String[]{String.valueOf(id)});
+    }
+
+    private void addSampleCards() {
+        KissCard q1 = new KissCard("Banana", "A kind of fruit that is good for health");
+        this.addKissCard(q1);
+        KissCard q2 = new KissCard("Orange", "A kind of fruit that is rich of Vitamin C");
+        this.addKissCard(q2);
     }
 }
