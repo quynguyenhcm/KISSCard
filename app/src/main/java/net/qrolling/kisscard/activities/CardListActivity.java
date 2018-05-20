@@ -19,13 +19,13 @@ import net.qrolling.kisscard.dto.KissCursorCardAdaptor;
 public class CardListActivity extends ListActivity {
 
     private KissCursorCardAdaptor kissCursorCardAdaptor;
-    private DbHelper db;
+    private final DbHelper db = new DbHelper(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card_list);
-        db = new DbHelper(this);
+
         initWordList();
     }
 

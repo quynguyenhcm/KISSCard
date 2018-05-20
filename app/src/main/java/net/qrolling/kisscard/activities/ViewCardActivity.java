@@ -9,6 +9,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -16,11 +18,11 @@ import android.widget.Toast;
 
 import net.qrolling.kisscard.R;
 import net.qrolling.kisscard.dal.DbHelper;
-import net.qrolling.kisscard.utils.OnSwipeListener;
 
-public class ViewCardActivity extends Activity implements View.OnClickListener {
+public class ViewCardActivity extends Activity implements View.OnClickListener, View.OnTouchListener {
+    private GestureDetector gestureDetector;
 
-    private DbHelper db;
+    private final DbHelper db = new DbHelper(this);
 
     private boolean isShowingDefintion;
     private TextView cardView;
@@ -35,7 +37,7 @@ public class ViewCardActivity extends Activity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card_view);
-        db = new DbHelper(this);
+        gestureDetector = new GestureDetector(ViewCardActivity.this, new GestureListener());
         initialiseUIComponent();
         registerEventHandler();
         populateCard();
@@ -46,7 +48,7 @@ public class ViewCardActivity extends Activity implements View.OnClickListener {
         if (view.getId() == R.id.cardView) {
             flipCard(term, definition);
         } else if (view.getId() == R.id.btnUpdateCard) {
-            initUpdateIntent();
+            startUpdateActivity();
         } else if (view.getId() == R.id.btnDelete) {
             confirmDelete();
         }
@@ -75,12 +77,13 @@ public class ViewCardActivity extends Activity implements View.OnClickListener {
         db.deleteCard(id);
     }
 
-    private void initUpdateIntent() {
-        Intent intent = new Intent(ViewCardActivity.this, EditCardActivity.class);
+    private void startUpdateActivity() {
+        Intent intent = new Intent(ViewCardActivity.this, UpdateCardActivity.class);
         intent.putExtra("id", id);
         intent.putExtra("definition", definition);
         intent.putExtra("term", term);
         startActivity(intent);
+        finish();
     }
 
     private void populateCard() {
@@ -92,28 +95,7 @@ public class ViewCardActivity extends Activity implements View.OnClickListener {
     }
 
     private void registerEventHandler() {
-        txtCard.setOnTouchListener(new OnSwipeListener(ViewCardActivity.this) {
-            public void onSwipeTop() {
-                Toast.makeText(ViewCardActivity.this, "top", Toast.LENGTH_SHORT).show();
-            }
-
-            public void onSwipeRight() {
-                Toast.makeText(ViewCardActivity.this, "right", Toast.LENGTH_SHORT).show();
-            }
-
-            public void onSwipeLeft() {
-                Toast.makeText(ViewCardActivity.this, "left", Toast.LENGTH_SHORT).show();
-            }
-
-            public void onSwipeBottom() {
-                Toast.makeText(ViewCardActivity.this, "bottom", Toast.LENGTH_SHORT).show();
-            }
-
-            public void onClick() {
-                flipCard(term, definition);
-            }
-
-        });
+        txtCard.setOnTouchListener(this);
         btnUpdate.setOnClickListener(this);
         btnDelete.setOnClickListener(this);
     }
@@ -148,5 +130,85 @@ public class ViewCardActivity extends Activity implements View.OnClickListener {
         };
         return deleteConfirmListener;
     }
+//
+//    @Override
+//    public boolean onTouchEvent(MotionEvent event) {
+//        int action = MotionEventCompat.getActionMasked(event);
+//        switch (action) {
+//            case (MotionEvent.ACTION_DOWN):
+//                onSwipeBottom();
+//                return true;
+//            case (MotionEvent.ACTION_UP):
+//                onSwipeTop();
+//                return true;
+//            default:
+//                return super.onTouchEvent(event);
+//        }
+//    }
 
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        return gestureDetector.onTouchEvent(motionEvent);
+    }
+
+    private final class GestureListener extends GestureDetector.SimpleOnGestureListener {
+
+        private static final int SWIPE_THRESHOLD = 100;
+        private static final int SWIPE_VELOCITY_THRESHOLD = 100;
+
+        @Override
+        public boolean onDown(MotionEvent e) {
+            onClick();
+            return true;
+        }
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            boolean result = false;
+            try {
+                float diffY = e2.getY() - e1.getY();
+                float diffX = e2.getX() - e1.getX();
+                if (Math.abs(diffX) > Math.abs(diffY)) {
+                    if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                        if (diffX > 0) {
+                            onSwipeRight();
+                        } else {
+                            onSwipeLeft();
+                        }
+                        result = true;
+                    }
+                } else if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
+                    if (diffY > 0) {
+                        onSwipeBottom();
+                    } else {
+                        onSwipeTop();
+                    }
+                    result = true;
+                }
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+            return result;
+        }
+    }
+
+    private void onSwipeTop() {
+        Toast.makeText(ViewCardActivity.this, "top", Toast.LENGTH_SHORT).show();
+    }
+
+    private void onSwipeRight() {
+        Toast.makeText(ViewCardActivity.this, "right", Toast.LENGTH_SHORT).show();
+    }
+
+    private void onSwipeLeft() {
+        Toast.makeText(ViewCardActivity.this, "left", Toast.LENGTH_SHORT).show();
+    }
+
+    private void onSwipeBottom() {
+        Toast.makeText(ViewCardActivity.this, "bottom", Toast.LENGTH_SHORT).show();
+    }
+
+    private void onClick() {
+        flipCard(term, definition);
+    }
 }

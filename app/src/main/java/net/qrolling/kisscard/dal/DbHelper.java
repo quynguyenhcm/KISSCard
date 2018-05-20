@@ -38,7 +38,6 @@ public class DbHelper extends SQLiteOpenHelper {
                 + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + KEY_TERM
                 + " TEXT, " + KEY_DEFINITION + " TEXT)";
         db.execSQL(sql);
-        addSampleCards();
     }
 
 

@@ -23,7 +23,7 @@
             android:name=".activities.ViewCardActivity"
             android:label="@string/title_activity_card_view" />
         <activity android:name=".activities.AddCardActivity" />
-        <activity android:name=".activities.EditCardActivity"></activity>
+        <activity android:name=".activities.UpdateCardActivity"></activity>
     </application>
 
 </manifest>

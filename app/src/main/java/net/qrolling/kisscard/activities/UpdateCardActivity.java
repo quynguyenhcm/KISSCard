@@ -10,8 +10,8 @@ import android.widget.EditText;
 import net.qrolling.kisscard.R;
 import net.qrolling.kisscard.dal.DbHelper;
 
-public class EditCardActivity extends Activity implements View.OnClickListener {
-    private DbHelper db;
+public class UpdateCardActivity extends Activity implements View.OnClickListener {
+    private final DbHelper db = new DbHelper(this);
     private EditText txtTerm, txtDefinition;
     private Button btnUpdate;
     private String definition;
@@ -21,8 +21,7 @@ public class EditCardActivity extends Activity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_card);
-        db = new DbHelper(this);
+        setContentView(R.layout.activity_update_card);
         initialiseUIComponent();
         populateCard();
         registerEventHandler();
