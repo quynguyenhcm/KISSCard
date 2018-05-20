@@ -40,8 +40,8 @@ public class CardListActivity extends ListActivity {
         Intent intent = new Intent(CardListActivity.this, ViewCardActivity.class);
         populateKissCardToIntent(kissCard, intent);
         startActivity(intent);
+        finish();
     }
-
 
     private void populateKissCardToIntent(Cursor kissCard, Intent intent) {
         intent.putExtra("id", kissCard.getInt(0));

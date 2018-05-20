@@ -96,6 +96,7 @@ public class ViewCardActivity extends Activity implements View.OnClickListener, 
 
     private void registerEventHandler() {
         txtCard.setOnTouchListener(this);
+        txtCard.setOnClickListener(this);
         btnUpdate.setOnClickListener(this);
         btnDelete.setOnClickListener(this);
     }
@@ -158,6 +159,11 @@ public class ViewCardActivity extends Activity implements View.OnClickListener, 
 
         @Override
         public boolean onDown(MotionEvent e) {
+            return true;
+        }
+
+        @Override
+        public boolean onSingleTapConfirmed(MotionEvent e) {
             onClick();
             return true;
         }
@@ -184,6 +190,8 @@ public class ViewCardActivity extends Activity implements View.OnClickListener, 
                         onSwipeTop();
                     }
                     result = true;
+                } else {
+                    onClick();
                 }
             } catch (Exception exception) {
                 exception.printStackTrace();
