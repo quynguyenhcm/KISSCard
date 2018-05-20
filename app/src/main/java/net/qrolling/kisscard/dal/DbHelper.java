@@ -81,7 +81,6 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public void deleteCard(int id) {
         db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
         String where = KEY_ID + "=?";
         db.delete(TABLE_KISS_CARDS, where, new String[]{String.valueOf(id)});
     }

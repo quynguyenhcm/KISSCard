@@ -11,7 +11,7 @@ import net.qrolling.kisscard.R;
 import net.qrolling.kisscard.dal.DbHelper;
 
 public class AddCardActivity extends Activity implements View.OnClickListener {
-    private final DbHelper db = new DbHelper(this);
+    private DbHelper db;
     private EditText txtTerm, txtDefinition;
     private Button btnSave, btnShow;
 
@@ -19,6 +19,7 @@ public class AddCardActivity extends Activity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_card);
+        db = new DbHelper(this);
         initialiseUIComponent();
         registerEventHandler();
     }

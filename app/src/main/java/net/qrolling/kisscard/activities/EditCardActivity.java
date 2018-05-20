@@ -11,7 +11,7 @@ import net.qrolling.kisscard.R;
 import net.qrolling.kisscard.dal.DbHelper;
 
 public class EditCardActivity extends Activity implements View.OnClickListener {
-    private final DbHelper db = new DbHelper(this);
+    private DbHelper db;
     private EditText txtTerm, txtDefinition;
     private Button btnUpdate;
     private String definition;
@@ -22,6 +22,7 @@ public class EditCardActivity extends Activity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_card);
+        db = new DbHelper(this);
         initialiseUIComponent();
         populateCard();
         registerEventHandler();

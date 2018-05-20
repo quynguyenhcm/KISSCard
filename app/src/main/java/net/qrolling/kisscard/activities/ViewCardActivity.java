@@ -20,7 +20,7 @@ import net.qrolling.kisscard.utils.OnSwipeListener;
 
 public class ViewCardActivity extends Activity implements View.OnClickListener {
 
-    private final DbHelper db = new DbHelper(this);
+    private DbHelper db;
 
     private boolean isShowingDefintion;
     private TextView cardView;
@@ -35,6 +35,7 @@ public class ViewCardActivity extends Activity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card_view);
+        db = new DbHelper(this);
         initialiseUIComponent();
         registerEventHandler();
         populateCard();
@@ -87,11 +88,10 @@ public class ViewCardActivity extends Activity implements View.OnClickListener {
         definition = (String) getIntent().getExtras().get("definition");
         term = (String) getIntent().getExtras().get("term");
         id = (Integer) getIntent().getExtras().get("id");
-        cardView.setText(definition);
+        cardView.setText(term);
     }
 
     private void registerEventHandler() {
-        txtCard.setOnClickListener(this);
         txtCard.setOnTouchListener(new OnSwipeListener(ViewCardActivity.this) {
             public void onSwipeTop() {
                 Toast.makeText(ViewCardActivity.this, "top", Toast.LENGTH_SHORT).show();
@@ -109,6 +109,10 @@ public class ViewCardActivity extends Activity implements View.OnClickListener {
                 Toast.makeText(ViewCardActivity.this, "bottom", Toast.LENGTH_SHORT).show();
             }
 
+            public void onClick() {
+                flipCard(term, definition);
+            }
+
         });
         btnUpdate.setOnClickListener(this);
         btnDelete.setOnClickListener(this);
@@ -121,12 +125,12 @@ public class ViewCardActivity extends Activity implements View.OnClickListener {
     }
 
     private void flipCard(String term, String definition) {
-        isShowingDefintion = !isShowingDefintion;
         if (!isShowingDefintion) {
-            cardView.setText(term);
-        } else {
             cardView.setText(definition);
+        } else {
+            cardView.setText(term);
         }
+        isShowingDefintion = !isShowingDefintion;
     }
 
     private DialogInterface.OnClickListener getDeleteConfirmListener() {
