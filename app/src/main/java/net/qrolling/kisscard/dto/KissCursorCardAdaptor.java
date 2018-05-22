@@ -2,6 +2,7 @@ package net.qrolling.kisscard.dto;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,10 +32,13 @@ public class KissCursorCardAdaptor extends CursorAdapter {
         TextView vTermId = (TextView) view.findViewById(R.id.termId);
         TextView vDefinition = (TextView) view.findViewById(R.id.definition);
         if (cursor.getPosition() % 2 == 1) {
-            view.setBackgroundColor(context.getResources().getColor(R.color.colorPrimary));
-        } else {
-            view.setBackgroundColor(context.getResources().getColor(R.color.colorPrimaryDark));
+            view.setBackgroundColor(Color.LTGRAY);
         }
+//        if (cursor.getPosition() % 2 == 1) {
+//            view.setBackgroundColor(context.getResources().getColor(R.color.colorPrimary));
+//        } else {
+//            view.setBackgroundColor(context.getResources().getColor(R.color.colorPrimaryDark));
+//        }
 
         // Extract properties from cursor
         String term = cursor.getString(cursor.getColumnIndexOrThrow(DbHelper.KEY_TERM));

@@ -30,7 +30,7 @@ public class CardListActivity extends ListActivity {
     }
 
     private void initWordList() {
-        Cursor kissCardCursor = db.getCardCursor();
+        Cursor kissCardCursor = db.getKissCardCursor();
         kissCursorCardAdaptor = new KissCursorCardAdaptor(this, kissCardCursor);
         setListAdapter(kissCursorCardAdaptor);
     }

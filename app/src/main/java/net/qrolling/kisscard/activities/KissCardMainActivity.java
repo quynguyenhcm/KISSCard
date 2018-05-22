@@ -65,6 +65,6 @@ public class KissCardMainActivity extends Activity {
     }
 
     public boolean isCardListAvailable() {
-        return db.getCardCursor().getCount() > 0;
+        return db.getKissCardCursor().getCount() > 0;
     }
 }

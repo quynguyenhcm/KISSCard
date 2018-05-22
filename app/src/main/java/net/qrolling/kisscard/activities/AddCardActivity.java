@@ -27,7 +27,8 @@ public class AddCardActivity extends Activity implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btnSave) {
-            saveNewTerm();
+            saveNewCard();
+            showCardList();
         } else if (v.getId() == R.id.btnShow) {
             showCardList();
         }
@@ -49,9 +50,10 @@ public class AddCardActivity extends Activity implements View.OnClickListener {
     private void showCardList() {
         Intent intent = new Intent(this, CardListActivity.class);
         startActivity(intent);
+        finish();
     }
 
-    private void saveNewTerm() {
+    private void saveNewCard() {
         db.insertCard(txtTerm.getText().toString(), txtDefinition.getText().toString());
     }
 }
