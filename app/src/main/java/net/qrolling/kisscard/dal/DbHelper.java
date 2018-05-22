@@ -12,6 +12,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import net.qrolling.kisscard.dto.KissCard;
 
+import java.util.ArrayList;
+
 public class DbHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 2;
     // Database Name
@@ -52,6 +54,23 @@ public class DbHelper extends SQLiteOpenHelper {
     // Adding new card
     public void addKissCard(KissCard card) {
         insertCard(card.getTerm(), card.getDefinition());
+    }
+
+    public ArrayList<KissCard> getAllCards() {
+        ArrayList<KissCard> cardList = new ArrayList<>();
+        Cursor cursor = getKissCardCursor();
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                KissCard quest = new KissCard();
+                quest.setID(cursor.getInt(0));
+                quest.setTerm(cursor.getString(1));
+                quest.setDefinition(cursor.getString(2));
+                cardList.add(quest);
+            } while (cursor.moveToNext());
+        }
+        // return quest list
+        return cardList;
     }
 
     public Cursor getKissCardCursor() {
