@@ -54,7 +54,7 @@ public class DbHelper extends SQLiteOpenHelper {
         insertCard(card.getTerm(), card.getDefinition());
     }
 
-    public Cursor getCardCursor() {
+    public Cursor getKissCardCursor() {
         String selectQuery = "SELECT  * FROM " + TABLE_KISS_CARDS;
         db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -84,10 +84,11 @@ public class DbHelper extends SQLiteOpenHelper {
         db.delete(TABLE_KISS_CARDS, where, new String[]{String.valueOf(id)});
     }
 
-    private void addSampleCards() {
-        KissCard q1 = new KissCard("Banana", "A kind of fruit that is good for health");
-        this.addKissCard(q1);
-        KissCard q2 = new KissCard("Orange", "A kind of fruit that is rich of Vitamin C");
-        this.addKissCard(q2);
+    public int rowcount() {
+        String selectQuery = "SELECT  COUNT(*) FROM " + TABLE_KISS_CARDS;
+        db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        cursor.moveToFirst();
+        return cursor.getInt(0);
     }
 }

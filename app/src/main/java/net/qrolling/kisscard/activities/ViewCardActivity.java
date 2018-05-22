@@ -65,7 +65,10 @@ public class ViewCardActivity extends Activity implements View.OnClickListener, 
 
     private void deleteCard() {
         deleteCardFromDatabase();
-        backToCardList();
+        if (db.rowcount() > 0) {
+            backToCardList();
+        }
+        finish();
     }
 
     private void backToCardList() {
@@ -119,8 +122,8 @@ public class ViewCardActivity extends Activity implements View.OnClickListener, 
     private DialogInterface.OnClickListener getDeleteConfirmListener() {
         DialogInterface.OnClickListener deleteConfirmListener = new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which) {
+            public void onClick(DialogInterface dialog, int selection) {
+                switch (selection) {
                     case DialogInterface.BUTTON_POSITIVE:
                         deleteCard();
                         break;
@@ -131,21 +134,6 @@ public class ViewCardActivity extends Activity implements View.OnClickListener, 
         };
         return deleteConfirmListener;
     }
-//
-//    @Override
-//    public boolean onTouchEvent(MotionEvent event) {
-//        int action = MotionEventCompat.getActionMasked(event);
-//        switch (action) {
-//            case (MotionEvent.ACTION_DOWN):
-//                onSwipeBottom();
-//                return true;
-//            case (MotionEvent.ACTION_UP):
-//                onSwipeTop();
-//                return true;
-//            default:
-//                return super.onTouchEvent(event);
-//        }
-//    }
 
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
