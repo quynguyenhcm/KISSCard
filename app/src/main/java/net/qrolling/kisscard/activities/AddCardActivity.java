@@ -9,17 +9,19 @@ import android.widget.EditText;
 
 import net.qrolling.kisscard.R;
 import net.qrolling.kisscard.dal.DbHelper;
+import net.qrolling.kisscard.utils.Validator;
 
 public class AddCardActivity extends Activity implements View.OnClickListener {
     private final DbHelper db = new DbHelper(this);
     private EditText txtTerm, txtDefinition;
-    private Button btnSave, btnShow;
+    private Button btnSave, btnSaveAndContinue;
+    private Validator validator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        validator = new Validator(this);
         setContentView(R.layout.activity_add_card);
-
         initialiseUIComponent();
         registerEventHandler();
     }
@@ -27,23 +29,28 @@ public class AddCardActivity extends Activity implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btnSave) {
-            saveNewCard();
-            showCardList();
-        } else if (v.getId() == R.id.btnShow) {
-            showCardList();
+            if (isValidCard()) {
+                saveNewCard();
+                showCardList();
+            }
+        } else if (v.getId() == R.id.btnSaveAndContinue) {
+            if (isValidCard()) {
+                saveNewCard();
+                reset();
+            }
         }
     }
 
     private void registerEventHandler() {
         btnSave.setOnClickListener(this);
-        btnShow.setOnClickListener(this);
+        btnSaveAndContinue.setOnClickListener(this);
     }
 
     private void initialiseUIComponent() {
         txtTerm = findViewById(R.id.cardTerm);
         txtDefinition = findViewById(R.id.cardDefinition);
         btnSave = findViewById(R.id.btnSave);
-        btnShow = findViewById(R.id.btnShow);
+        btnSaveAndContinue = findViewById(R.id.btnSaveAndContinue);
     }
     
     private void showCardList() {
@@ -54,5 +61,15 @@ public class AddCardActivity extends Activity implements View.OnClickListener {
 
     private void saveNewCard() {
         db.insertCard(txtTerm.getText().toString(), txtDefinition.getText().toString());
+    }
+
+    private void reset() {
+        txtDefinition.setText("");
+        txtTerm.setText("");
+    }
+
+    private boolean isValidCard() {
+        return validator.isNotNull(txtTerm, getResources().getString(R.string.lbl_term))
+                & validator.isNotNull(txtDefinition, getResources().getString(R.string.lbl_definition));
     }
 }

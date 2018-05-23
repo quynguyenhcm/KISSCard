@@ -43,9 +43,9 @@ public class ViewCardActivity extends Activity implements View.OnClickListener, 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         gestureDetector = new GestureDetector(ViewCardActivity.this, new GestureListener());
+        selectedPosition = getIntent().getIntExtra("selectedPosition", 0);
         initialiseUIComponent();
         initialiseCardList();
-        selectedPosition = getIntent().getIntExtra("selectedPosition", 0);
         populateCard(selectedPosition);
     }
 
@@ -53,7 +53,7 @@ public class ViewCardActivity extends Activity implements View.OnClickListener, 
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.cardView) {
-            flipCard(term, definition);
+            flipCard();
         } else if (view.getId() == R.id.btnUpdateCard) {
             startUpdateActivity();
         } else if (view.getId() == R.id.btnDelete) {
@@ -89,9 +89,7 @@ public class ViewCardActivity extends Activity implements View.OnClickListener, 
 
     private void startUpdateActivity() {
         Intent intent = new Intent(ViewCardActivity.this, UpdateCardActivity.class);
-        intent.putExtra("id", id);
-        intent.putExtra("definition", definition);
-        intent.putExtra("term", term);
+        intent.putExtra("card", cards.get(selectedPosition));
         startActivity(intent);
         finish();
     }
@@ -118,7 +116,7 @@ public class ViewCardActivity extends Activity implements View.OnClickListener, 
         btnDelete.setOnClickListener(this);
     }
 
-    private void flipCard(String term, String definition) {
+    private void flipCard() {
         if (!isShowingDefintion) {
             txtCard.setText(definition);
         } else {
@@ -202,7 +200,7 @@ public class ViewCardActivity extends Activity implements View.OnClickListener, 
     }
 
     private void onSwipeTop() {
-        showPreviousCard();
+        //showNextCard();
     }
 
     private void onSwipeRight() {
@@ -217,7 +215,7 @@ public class ViewCardActivity extends Activity implements View.OnClickListener, 
         if (selectedPosition > 0) {
             populateCard(--selectedPosition);
         } else {
-            Toast.makeText(ViewCardActivity.this, "No more card to show", Toast.LENGTH_SHORT).show();
+            showEndOfListMessage();
         }
     }
 
@@ -225,15 +223,19 @@ public class ViewCardActivity extends Activity implements View.OnClickListener, 
         if (selectedPosition < listSize - 1) {
             populateCard(++selectedPosition);
         } else {
-            Toast.makeText(ViewCardActivity.this, "No more card to show", Toast.LENGTH_SHORT).show();
+            showEndOfListMessage();
         }
     }
 
     private void onSwipeBottom() {
-        showNextCard();
+        // showPreviousCard();
     }
 
     private void onClick() {
-        flipCard(term, definition);
+        flipCard();
+    }
+
+    private void showEndOfListMessage() {
+        Toast.makeText(ViewCardActivity.this, getResources().getString(R.string.no_more_card_to_show), Toast.LENGTH_SHORT).show();
     }
 }

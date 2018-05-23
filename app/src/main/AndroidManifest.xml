@@ -18,12 +18,28 @@
         </activity>
         <activity
             android:name=".activities.CardListActivity"
-            android:label="@string/title_activity_main" />
+            android:label="@string/title_activity_main">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.KissCardMainActivity" />
+        </activity>
         <activity
             android:name=".activities.ViewCardActivity"
-            android:label="@string/title_activity_card_view" />
-        <activity android:name=".activities.AddCardActivity" />
-        <activity android:name=".activities.UpdateCardActivity" />
+            android:label="@string/title_activity_card_view">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.CardListActivity" />
+        </activity>
+        <activity android:name=".activities.AddCardActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.KissCardMainActivity" />
+        </activity>
+        <activity android:name=".activities.UpdateCardActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.ViewCardActivity" />
+        </activity>
     </application>
 
 </manifest>
