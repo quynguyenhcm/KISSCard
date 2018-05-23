@@ -18,30 +18,37 @@ import android.widget.Toast;
 
 import net.qrolling.kisscard.R;
 import net.qrolling.kisscard.dal.DbHelper;
+import net.qrolling.kisscard.dto.KissCard;
+
+import java.util.ArrayList;
 
 public class ViewCardActivity extends Activity implements View.OnClickListener, View.OnTouchListener {
     private GestureDetector gestureDetector;
 
     private final DbHelper db = new DbHelper(this);
+    private int selectedPosition;
+    private int listSize;
 
     private boolean isShowingDefintion;
-    private TextView cardView;
+
     private TextView txtCard;
     private Button btnUpdate, btnDelete;
 
     private String definition;
     private String term;
     private Integer id;
+    private ArrayList<KissCard> cards;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_card_view);
         gestureDetector = new GestureDetector(ViewCardActivity.this, new GestureListener());
         initialiseUIComponent();
-        registerEventHandler();
-        populateCard();
+        initialiseCardList();
+        selectedPosition = getIntent().getIntExtra("selectedPosition", 0);
+        populateCard(selectedPosition);
     }
+
 
     @Override
     public void onClick(View view) {
@@ -89,32 +96,33 @@ public class ViewCardActivity extends Activity implements View.OnClickListener, 
         finish();
     }
 
-    private void populateCard() {
-        cardView = findViewById(R.id.cardView);
-        definition = (String) getIntent().getExtras().get("definition");
-        term = (String) getIntent().getExtras().get("term");
-        id = (Integer) getIntent().getExtras().get("id");
-        cardView.setText(term);
-    }
-
-    private void registerEventHandler() {
-        txtCard.setOnTouchListener(this);
-        txtCard.setOnClickListener(this);
-        btnUpdate.setOnClickListener(this);
-        btnDelete.setOnClickListener(this);
+    private void populateCard(int selectedPosition) {
+        KissCard selectedCard = cards.get(selectedPosition);
+        definition = selectedCard.getDefinition();
+        term = selectedCard.getTerm();
+        id = selectedCard.getId();
+        txtCard.setText(term);
     }
 
     private void initialiseUIComponent() {
+        setContentView(R.layout.activity_card_view);
+
         txtCard = findViewById(R.id.cardView);
+        txtCard.setOnTouchListener(this);
+        txtCard.setOnClickListener(this);
+
         btnUpdate = findViewById(R.id.btnUpdateCard);
+        btnUpdate.setOnClickListener(this);
+
         btnDelete = findViewById(R.id.btnDelete);
+        btnDelete.setOnClickListener(this);
     }
 
     private void flipCard(String term, String definition) {
         if (!isShowingDefintion) {
-            cardView.setText(definition);
+            txtCard.setText(definition);
         } else {
-            cardView.setText(term);
+            txtCard.setText(term);
         }
         isShowingDefintion = !isShowingDefintion;
     }
@@ -133,6 +141,11 @@ public class ViewCardActivity extends Activity implements View.OnClickListener, 
             }
         };
         return deleteConfirmListener;
+    }
+
+    private void initialiseCardList() {
+        cards = getIntent().getParcelableArrayListExtra("cardList");
+        listSize = cards.size();
     }
 
     @Override
@@ -189,19 +202,35 @@ public class ViewCardActivity extends Activity implements View.OnClickListener, 
     }
 
     private void onSwipeTop() {
-        Toast.makeText(ViewCardActivity.this, "top", Toast.LENGTH_SHORT).show();
+        showPreviousCard();
     }
 
     private void onSwipeRight() {
-        Toast.makeText(ViewCardActivity.this, "right", Toast.LENGTH_SHORT).show();
+        showNextCard();
     }
 
     private void onSwipeLeft() {
-        Toast.makeText(ViewCardActivity.this, "left", Toast.LENGTH_SHORT).show();
+        showPreviousCard();
+    }
+
+    private void showPreviousCard() {
+        if (selectedPosition > 0) {
+            populateCard(--selectedPosition);
+        } else {
+            Toast.makeText(ViewCardActivity.this, "No more card to show", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void showNextCard() {
+        if (selectedPosition < listSize - 1) {
+            populateCard(++selectedPosition);
+        } else {
+            Toast.makeText(ViewCardActivity.this, "No more card to show", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void onSwipeBottom() {
-        Toast.makeText(ViewCardActivity.this, "bottom", Toast.LENGTH_SHORT).show();
+        showNextCard();
     }
 
     private void onClick() {

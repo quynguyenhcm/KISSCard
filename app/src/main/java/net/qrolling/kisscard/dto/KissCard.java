@@ -1,35 +1,64 @@
 package net.qrolling.kisscard.dto;
 
-import java.io.Serializable;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
  * Created by Quy Nguyen (nguyenledinhquy@gmail.com | https://github.com/quynguyenhcm) on 18/05/18.
  */
 
-public class KissCard implements Serializable {
-    private int ID;
+public class KissCard implements Parcelable {
+    private int id;
     private String term;
     private String definition;
 
     public KissCard() {
-        ID = 0;
+        id = 0;
         term = "";
         definition = "";
     }
 
-    public KissCard(String pQuestion, String pAnswer) {
-
-        term = pQuestion;
-
-        definition = pAnswer;
+    private KissCard(Parcel in) {
+        id = in.readInt();
+        term = in.readString();
+        definition = in.readString();
     }
 
-    public int getID() {
-        return ID;
+    public KissCard(String term, String definition) {
+        this.term = term;
+        this.definition = definition;
     }
 
-    public void setID(int ID) {
-        this.ID = ID;
+    public static final Creator<KissCard> CREATOR = new Creator<KissCard>() {
+        @Override
+        public KissCard createFromParcel(Parcel in) {
+            return new KissCard(in);
+        }
+
+        @Override
+        public KissCard[] newArray(int size) {
+            return new KissCard[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(id);
+        parcel.writeString(term);
+        parcel.writeString(definition);
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getTerm() {
@@ -47,4 +76,5 @@ public class KissCard implements Serializable {
     public void setDefinition(String definition) {
         this.definition = definition;
     }
+
 }

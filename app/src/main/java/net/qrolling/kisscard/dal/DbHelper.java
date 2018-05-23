@@ -63,7 +63,7 @@ public class DbHelper extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 KissCard quest = new KissCard();
-                quest.setID(cursor.getInt(0));
+                quest.setId(cursor.getInt(0));
                 quest.setTerm(cursor.getString(1));
                 quest.setDefinition(cursor.getString(2));
                 cardList.add(quest);

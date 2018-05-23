@@ -45,8 +45,7 @@ public class AddCardActivity extends Activity implements View.OnClickListener {
         btnSave = findViewById(R.id.btnSave);
         btnShow = findViewById(R.id.btnShow);
     }
-
-
+    
     private void showCardList() {
         Intent intent = new Intent(this, CardListActivity.class);
         startActivity(intent);

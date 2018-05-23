@@ -47,21 +47,21 @@ public class CardArrayAdaptor extends ArrayAdapter<KissCard> {
             viewHolder = (ViewHolder) listItem.getTag();
         }
 
-        viewHolder.id.setText(Integer.toString(card.getID()));
+        viewHolder.id.setText(Integer.toString(card.getId()));
         viewHolder.term.setText(card.getTerm());
         viewHolder.term.setTag(position);
         viewHolder.definition.setText(card.getDefinition());
-//        term.setTag(card.getID(), card);
+//        term.setTag(card.getId(), card);
         // Attach the click event handler
-        viewHolder.term.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int position = (Integer) view.getTag();
-                // Access the row position here to get the correct data item
-                KissCard kissCard = getItem(position);
-               
-            }
-        });
+//        viewHolder.term.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                int position = (Integer) view.getTag();
+//                // Access the row position here to get the correct data item
+//                KissCard kissCard = getItem(position);
+//
+//            }
+//        });
         // Return the completed view to render on screen
         return listItem;
     } // View lookup cache
