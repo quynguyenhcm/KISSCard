@@ -11,22 +11,26 @@ public class KissCard implements Parcelable {
     private int id;
     private String term;
     private String definition;
+    private static final int NEW_CARD_ID = -1;
 
     public KissCard() {
-        id = 0;
-        term = "";
-        definition = "";
+        this(KissCard.NEW_CARD_ID, null, null);
+    }
+
+    public KissCard(String term, String definition) {
+        this(KissCard.NEW_CARD_ID, term, definition);
+    }
+
+    public KissCard(int id, String term, String definition) {
+        this.id = id;
+        this.term = term;
+        this.definition = definition;
     }
 
     private KissCard(Parcel in) {
         id = in.readInt();
         term = in.readString();
         definition = in.readString();
-    }
-
-    public KissCard(String term, String definition) {
-        this.term = term;
-        this.definition = definition;
     }
 
     public static final Creator<KissCard> CREATOR = new Creator<KissCard>() {
@@ -75,6 +79,10 @@ public class KissCard implements Parcelable {
 
     public void setDefinition(String definition) {
         this.definition = definition;
+    }
+
+    public boolean isNew() {
+        return this.id == KissCard.NEW_CARD_ID;
     }
 
 }

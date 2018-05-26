@@ -32,9 +32,9 @@ public class CardArrayAdaptor extends ArrayAdapter<KissCard> {
         if (listItem == null) {
             viewCache = new ViewCache();
             listItem = LayoutInflater.from(mContext).inflate(R.layout.card_row, parent, false);
-            viewCache.id = listItem.findViewById(R.id.atermId);
-            viewCache.definition = listItem.findViewById(R.id.adefinition);
-            viewCache.term = listItem.findViewById(R.id.aterm);
+            viewCache.id = listItem.findViewById(R.id.card_id);
+            viewCache.definition = listItem.findViewById(R.id.card_definition);
+            viewCache.term = listItem.findViewById(R.id.card_term);
             listItem.setTag(viewCache);
         } else {
             viewCache = (ViewCache) listItem.getTag();

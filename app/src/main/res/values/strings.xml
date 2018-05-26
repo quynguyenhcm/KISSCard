@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">KISS Card</string>
     <string name="menu_settings">Settings</string>
-    <string name="str_add">Add</string>
+    <string name="str_add_card">New Card</string>
     <string name="str_save">Save</string>
     <string name="str_save_and_add_another">Save and Add Another</string>
     <string name="str_study">Study</string>

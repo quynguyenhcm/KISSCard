@@ -4,7 +4,6 @@ package net.qrolling.kisscard.activities;
  * Created by Quy Nguyen (nguyenledinhquy@gmail.com | https://github.com/quynguyenhcm) on 18/05/18.
  */
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,15 +16,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import net.qrolling.kisscard.R;
-import net.qrolling.kisscard.dal.DbHelper;
+import net.qrolling.kisscard.dto.CardLisHolder;
 import net.qrolling.kisscard.dto.KissCard;
 
-import java.util.ArrayList;
-
-public class ViewCardActivity extends Activity implements View.OnClickListener, View.OnTouchListener {
+public class ViewCardActivity extends DbInteractionActivity implements View.OnClickListener, View.OnTouchListener {
     private GestureDetector gestureDetector;
 
-    private final DbHelper db = new DbHelper(this);
     private int selectedPosition;
     private int listSize;
 
@@ -37,13 +33,15 @@ public class ViewCardActivity extends Activity implements View.OnClickListener, 
     private String definition;
     private String term;
     private Integer id;
-    private ArrayList<KissCard> cards;
+    private KissCard card;
+    private final CardLisHolder cardLisHolder = CardLisHolder.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         gestureDetector = new GestureDetector(ViewCardActivity.this, new GestureListener());
-        selectedPosition = getIntent().getIntExtra("selectedPosition", 0);
+        card = getIntent().getParcelableExtra("card");
+        selectedPosition = getIntent().getIntExtra("selectedPosition", getDb().getCardPosition(card));
         initialiseUIComponent();
         initialiseCardList();
         populateCard(selectedPosition);
@@ -72,8 +70,12 @@ public class ViewCardActivity extends Activity implements View.OnClickListener, 
 
     private void deleteCard() {
         deleteCardFromDatabase();
-        if (db.rowcount() > 0) {
+        cardLisHolder.removeCard(selectedPosition);
+        if (getDb().rowcount() > 0) {
             backToCardList();
+        } else {
+            CardLisHolder.getInstance().removeCard(selectedPosition);
+            populateCard(selectedPosition);
         }
         finish();
     }
@@ -84,18 +86,18 @@ public class ViewCardActivity extends Activity implements View.OnClickListener, 
     }
 
     private void deleteCardFromDatabase() {
-        db.deleteCard(id);
+        getDb().deleteCard(id);
     }
 
     private void startUpdateActivity() {
-        Intent intent = new Intent(ViewCardActivity.this, UpdateCardActivity.class);
-        intent.putExtra("card", cards.get(selectedPosition));
+        Intent intent = new Intent(ViewCardActivity.this, AddCardActivity.class);
+        intent.putExtra("card", cardLisHolder.getCards().get(selectedPosition));
         startActivity(intent);
         finish();
     }
 
     private void populateCard(int selectedPosition) {
-        KissCard selectedCard = cards.get(selectedPosition);
+        KissCard selectedCard = cardLisHolder.getCards().get(selectedPosition);
         definition = selectedCard.getDefinition();
         term = selectedCard.getTerm();
         id = selectedCard.getId();
@@ -104,7 +106,6 @@ public class ViewCardActivity extends Activity implements View.OnClickListener, 
 
     private void initialiseUIComponent() {
         setContentView(R.layout.activity_card_view);
-
         txtCard = findViewById(R.id.cardView);
         txtCard.setOnTouchListener(this);
         txtCard.setOnClickListener(this);
@@ -142,8 +143,7 @@ public class ViewCardActivity extends Activity implements View.OnClickListener, 
     }
 
     private void initialiseCardList() {
-        cards = getIntent().getParcelableArrayListExtra("cardList");
-        listSize = cards.size();
+        listSize = cardLisHolder.getCards().size();
     }
 
     @Override
@@ -204,11 +204,11 @@ public class ViewCardActivity extends Activity implements View.OnClickListener, 
     }
 
     private void onSwipeRight() {
-        showNextCard();
+        showPreviousCard();
     }
 
     private void onSwipeLeft() {
-        showPreviousCard();
+        showNextCard();
     }
 
     private void showPreviousCard() {

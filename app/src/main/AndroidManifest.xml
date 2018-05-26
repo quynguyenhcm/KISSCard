@@ -7,21 +7,23 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
+        <!--<activity-->
+        <!--android:name=".activities.KissCardMainActivity"-->
+        <!--android:label="@string/app_name">-->
+        <!--<intent-filter>-->
+        <!--<action android:name="android.intent.action.MAIN" />-->
+
+        <!--<category android:name="android.intent.category.LAUNCHER" />-->
+        <!--</intent-filter>-->
+        <!--</activity>-->
         <activity
-            android:name=".activities.KissCardMainActivity"
-            android:label="@string/app_name">
+            android:name=".activities.CardListActivity"
+            android:label="@string/title_activity_main">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name=".activities.CardListActivity"
-            android:label="@string/title_activity_main">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.KissCardMainActivity" />
         </activity>
         <activity
             android:name=".activities.ViewCardActivity"
@@ -31,14 +33,7 @@
                 android:value=".activities.CardListActivity" />
         </activity>
         <activity android:name=".activities.AddCardActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.KissCardMainActivity" />
-        </activity>
-        <activity android:name=".activities.UpdateCardActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.ViewCardActivity" />
+
         </activity>
     </application>
 
