@@ -1,7 +1,11 @@
 package net.qrolling.kisscard.dto;
 
+import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.RequiresApi;
+
+import java.util.Objects;
 
 /**
  * Created by Quy Nguyen (nguyenledinhquy@gmail.com | https://github.com/quynguyenhcm) on 18/05/18.
@@ -85,4 +89,21 @@ public class KissCard implements Parcelable {
         return this.id == KissCard.NEW_CARD_ID;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        KissCard kissCard = (KissCard) o;
+        return id == kissCard.id &&
+                Objects.equals(term, kissCard.term) &&
+                Objects.equals(definition, kissCard.definition);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, term, definition);
+    }
 }

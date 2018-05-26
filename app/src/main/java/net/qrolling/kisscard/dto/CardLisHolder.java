@@ -9,15 +9,13 @@ import java.util.Map;
  * Created by Quy Nguyen (nguyenledinhquy@gmail.com | https://github.com/quynguyenhcm) on 24/05/18.
  */
 public class CardLisHolder {
-    private boolean isInitialised = false;
+
     private static final CardLisHolder DATA_HOLDER = new CardLisHolder();
     Map<String, WeakReference<ArrayList<KissCard>>> data = new HashMap<>();
     public static final String CARD_LIST = "cardList";
-    private int selectedPosition;
 
     public void saveList(ArrayList<KissCard> cards) {
         data.put(CARD_LIST, new WeakReference<>(cards));
-        getInstance().setInitialised(true);
     }
 
     public ArrayList<KissCard> getCards() {
@@ -30,20 +28,15 @@ public class CardLisHolder {
         cards.remove(position);
     }
 
-    public void removeCard(KissCard card) {
-        ArrayList<KissCard> cards = getCards();
-        cards.remove(card);
-    }
-
     public static CardLisHolder getInstance() {
         return DATA_HOLDER;
     }
 
-    public boolean isInitialised() {
-        return isInitialised;
+    public int size() {
+        return getCards().size();
     }
 
-    public void setInitialised(boolean initialised) {
-        isInitialised = initialised;
+    public int getIndex(KissCard card) {
+        return getCards().indexOf(card);
     }
 }

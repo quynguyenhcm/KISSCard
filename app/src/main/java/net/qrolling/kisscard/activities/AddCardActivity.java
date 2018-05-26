@@ -59,8 +59,8 @@ public class AddCardActivity extends DbInteractionActivity implements View.OnCli
     }
 
     private void updateCardFromView() {
-        card.setDefinition(txtDefinition.getText().toString());
-        card.setTerm(txtTerm.getText().toString());
+        card.setDefinition(txtDefinition.getText().toString().trim());
+        card.setTerm(txtTerm.getText().toString().trim());
     }
 
     private void cancel() {
@@ -116,11 +116,6 @@ public class AddCardActivity extends DbInteractionActivity implements View.OnCli
         Intent intent = new Intent(this, CardListActivity.class);
         startActivity(intent);
         finish();
-    }
-
-    private void reset() {
-        txtDefinition.setText("");
-        txtTerm.setText("");
     }
 
     private boolean isValidCard() {

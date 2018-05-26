@@ -27,7 +27,7 @@ public class ViewCardActivity extends DbInteractionActivity implements View.OnCl
 
     private boolean isShowingDefintion;
 
-    private TextView txtCard;
+    private TextView txtCard, txtCount;
     private Button btnUpdate, btnDelete;
 
     private String definition;
@@ -41,7 +41,7 @@ public class ViewCardActivity extends DbInteractionActivity implements View.OnCl
         super.onCreate(savedInstanceState);
         gestureDetector = new GestureDetector(ViewCardActivity.this, new GestureListener());
         card = getIntent().getParcelableExtra("card");
-        selectedPosition = getIntent().getIntExtra("selectedPosition", getDb().getCardPosition(card));
+        selectedPosition = getIntent().getIntExtra("selectedPosition", cardLisHolder.getIndex(card));
         initialiseUIComponent();
         initialiseCardList();
         populateCard(selectedPosition);
@@ -71,13 +71,15 @@ public class ViewCardActivity extends DbInteractionActivity implements View.OnCl
     private void deleteCard() {
         deleteCardFromDatabase();
         cardLisHolder.removeCard(selectedPosition);
-        if (getDb().rowcount() > 0) {
+        if (cardLisHolder.size() == 0) {
             backToCardList();
+            finish();
         } else {
-            CardLisHolder.getInstance().removeCard(selectedPosition);
+            if (selectedPosition == cardLisHolder.size()) {
+                selectedPosition--;
+            }
             populateCard(selectedPosition);
         }
-        finish();
     }
 
     private void backToCardList() {
@@ -102,6 +104,7 @@ public class ViewCardActivity extends DbInteractionActivity implements View.OnCl
         term = selectedCard.getTerm();
         id = selectedCard.getId();
         txtCard.setText(term);
+        txtCount.setText(String.format("%d/%d", selectedPosition + 1, cardLisHolder.size()));
     }
 
     private void initialiseUIComponent() {
@@ -109,6 +112,8 @@ public class ViewCardActivity extends DbInteractionActivity implements View.OnCl
         txtCard = findViewById(R.id.cardView);
         txtCard.setOnTouchListener(this);
         txtCard.setOnClickListener(this);
+
+        txtCount = findViewById(R.id.txtCount);
 
         btnUpdate = findViewById(R.id.btnUpdateCard);
         btnUpdate.setOnClickListener(this);
