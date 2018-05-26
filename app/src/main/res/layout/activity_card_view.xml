@@ -8,15 +8,14 @@
     <TextView
         android:id="@+id/cardView"
         android:layout_width="wrap_content"
-        android:layout_height="464dp"
+        android:layout_height="432dp"
 
         android:layout_alignParentEnd="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true" />
-
-
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="32dp" />
     <Button
         android:id="@+id/btnUpdateCard"
         android:layout_width="wrap_content"
@@ -38,5 +37,14 @@
         android:text="@string/str_delete"
         android:layout_alignParentRight="true"
         android:layout_marginRight="55dp" />
+
+    <TextView
+        android:id="@+id/txtCount"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:text="TextView"
+        android:layout_alignParentLeft="true" />
 </RelativeLayout>
 

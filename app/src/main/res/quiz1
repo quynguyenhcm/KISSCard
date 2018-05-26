@@ -57,10 +57,10 @@ A User Interface
 8
 A Manifest file contains
 A list of all of the requirements of the app
-Java code describing the application name, ID, components of the app, permissions, hardware and software features the app requires
+Java code describing the application name, id, components of the app, permissions, hardware and software features the app requires
 An xml representation of the applications requirements
-The application name, ID, components of the app, permissions, and hardware and software features the app requires
-Java code describing the application name, ID, components of the app, permissions, hardware and software features the app requires
+The application name, id, components of the app, permissions, and hardware and software features the app requires
+Java code describing the application name, id, components of the app, permissions, hardware and software features the app requires
 
 9
 Name the two most common languages which are used to create Modern Mobile Applications?

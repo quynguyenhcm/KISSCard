@@ -4,7 +4,6 @@ package net.qrolling.kisscard.activities;
  * Created by Quy Nguyen (nguyenledinhquy@gmail.com | https://github.com/quynguyenhcm) on 18/05/18.
  */
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,36 +16,42 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import net.qrolling.kisscard.R;
-import net.qrolling.kisscard.dal.DbHelper;
+import net.qrolling.kisscard.dto.CardLisHolder;
+import net.qrolling.kisscard.dto.KissCard;
 
-public class ViewCardActivity extends Activity implements View.OnClickListener, View.OnTouchListener {
+public class ViewCardActivity extends DbInteractionActivity implements View.OnClickListener, View.OnTouchListener {
     private GestureDetector gestureDetector;
 
-    private final DbHelper db = new DbHelper(this);
+    private int selectedPosition;
+    private int listSize;
 
     private boolean isShowingDefintion;
-    private TextView cardView;
-    private TextView txtCard;
+
+    private TextView txtCard, txtCount;
     private Button btnUpdate, btnDelete;
 
     private String definition;
     private String term;
     private Integer id;
+    private KissCard card;
+    private final CardLisHolder cardLisHolder = CardLisHolder.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_card_view);
         gestureDetector = new GestureDetector(ViewCardActivity.this, new GestureListener());
+        card = getIntent().getParcelableExtra("card");
+        selectedPosition = getIntent().getIntExtra("selectedPosition", cardLisHolder.getIndex(card));
         initialiseUIComponent();
-        registerEventHandler();
-        populateCard();
+        initialiseCardList();
+        populateCard(selectedPosition);
     }
+
 
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.cardView) {
-            flipCard(term, definition);
+            flipCard();
         } else if (view.getId() == R.id.btnUpdateCard) {
             startUpdateActivity();
         } else if (view.getId() == R.id.btnDelete) {
@@ -65,10 +70,16 @@ public class ViewCardActivity extends Activity implements View.OnClickListener, 
 
     private void deleteCard() {
         deleteCardFromDatabase();
-        if (db.rowcount() > 0) {
+        cardLisHolder.removeCard(selectedPosition);
+        if (cardLisHolder.size() == 0) {
             backToCardList();
+            finish();
+        } else {
+            if (selectedPosition == cardLisHolder.size()) {
+                selectedPosition--;
+            }
+            populateCard(selectedPosition);
         }
-        finish();
     }
 
     private void backToCardList() {
@@ -77,44 +88,45 @@ public class ViewCardActivity extends Activity implements View.OnClickListener, 
     }
 
     private void deleteCardFromDatabase() {
-        db.deleteCard(id);
+        getDb().deleteCard(id);
     }
 
     private void startUpdateActivity() {
-        Intent intent = new Intent(ViewCardActivity.this, UpdateCardActivity.class);
-        intent.putExtra("id", id);
-        intent.putExtra("definition", definition);
-        intent.putExtra("term", term);
+        Intent intent = new Intent(ViewCardActivity.this, AddCardActivity.class);
+        intent.putExtra("card", cardLisHolder.getCards().get(selectedPosition));
         startActivity(intent);
         finish();
     }
 
-    private void populateCard() {
-        cardView = findViewById(R.id.cardView);
-        definition = (String) getIntent().getExtras().get("definition");
-        term = (String) getIntent().getExtras().get("term");
-        id = (Integer) getIntent().getExtras().get("id");
-        cardView.setText(term);
-    }
-
-    private void registerEventHandler() {
-        txtCard.setOnTouchListener(this);
-        txtCard.setOnClickListener(this);
-        btnUpdate.setOnClickListener(this);
-        btnDelete.setOnClickListener(this);
+    private void populateCard(int selectedPosition) {
+        KissCard selectedCard = cardLisHolder.getCards().get(selectedPosition);
+        definition = selectedCard.getDefinition();
+        term = selectedCard.getTerm();
+        id = selectedCard.getId();
+        txtCard.setText(term);
+        txtCount.setText(String.format("%d/%d", selectedPosition + 1, cardLisHolder.size()));
     }
 
     private void initialiseUIComponent() {
+        setContentView(R.layout.activity_card_view);
         txtCard = findViewById(R.id.cardView);
+        txtCard.setOnTouchListener(this);
+        txtCard.setOnClickListener(this);
+
+        txtCount = findViewById(R.id.txtCount);
+
         btnUpdate = findViewById(R.id.btnUpdateCard);
+        btnUpdate.setOnClickListener(this);
+
         btnDelete = findViewById(R.id.btnDelete);
+        btnDelete.setOnClickListener(this);
     }
 
-    private void flipCard(String term, String definition) {
+    private void flipCard() {
         if (!isShowingDefintion) {
-            cardView.setText(definition);
+            txtCard.setText(definition);
         } else {
-            cardView.setText(term);
+            txtCard.setText(term);
         }
         isShowingDefintion = !isShowingDefintion;
     }
@@ -133,6 +145,10 @@ public class ViewCardActivity extends Activity implements View.OnClickListener, 
             }
         };
         return deleteConfirmListener;
+    }
+
+    private void initialiseCardList() {
+        listSize = cardLisHolder.getCards().size();
     }
 
     @Override
@@ -189,22 +205,42 @@ public class ViewCardActivity extends Activity implements View.OnClickListener, 
     }
 
     private void onSwipeTop() {
-        Toast.makeText(ViewCardActivity.this, "top", Toast.LENGTH_SHORT).show();
+        //showNextCard();
     }
 
     private void onSwipeRight() {
-        Toast.makeText(ViewCardActivity.this, "right", Toast.LENGTH_SHORT).show();
+        showPreviousCard();
     }
 
     private void onSwipeLeft() {
-        Toast.makeText(ViewCardActivity.this, "left", Toast.LENGTH_SHORT).show();
+        showNextCard();
+    }
+
+    private void showPreviousCard() {
+        if (selectedPosition > 0) {
+            populateCard(--selectedPosition);
+        } else {
+            showEndOfListMessage();
+        }
+    }
+
+    private void showNextCard() {
+        if (selectedPosition < listSize - 1) {
+            populateCard(++selectedPosition);
+        } else {
+            showEndOfListMessage();
+        }
     }
 
     private void onSwipeBottom() {
-        Toast.makeText(ViewCardActivity.this, "bottom", Toast.LENGTH_SHORT).show();
+        // showPreviousCard();
     }
 
     private void onClick() {
-        flipCard(term, definition);
+        flipCard();
+    }
+
+    private void showEndOfListMessage() {
+        Toast.makeText(ViewCardActivity.this, getResources().getString(R.string.no_more_card_to_show), Toast.LENGTH_SHORT).show();
     }
 }

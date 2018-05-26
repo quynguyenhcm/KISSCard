@@ -12,6 +12,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import net.qrolling.kisscard.dto.KissCard;
 
+import java.util.ArrayList;
+
 public class DbHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 2;
     // Database Name
@@ -49,9 +51,21 @@ public class DbHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    // Adding new card
-    public void addKissCard(KissCard card) {
-        insertCard(card.getTerm(), card.getDefinition());
+    public ArrayList<KissCard> getAllCards() {
+        ArrayList<KissCard> cardList = new ArrayList<>();
+        Cursor cursor = getKissCardCursor();
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                KissCard quest = new KissCard();
+                quest.setId(cursor.getInt(0));
+                quest.setTerm(cursor.getString(1));
+                quest.setDefinition(cursor.getString(2));
+                cardList.add(quest);
+            } while (cursor.moveToNext());
+        }
+        // return quest list
+        return cardList;
     }
 
     public Cursor getKissCardCursor() {
@@ -61,21 +75,29 @@ public class DbHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
-    public void insertCard(String term, String defintion) {
+    public void insertCard(KissCard card) {
         db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(KEY_TERM, term);
-        values.put(KEY_DEFINITION, defintion);
+        values.put(KEY_TERM, card.getTerm());
+        values.put(KEY_DEFINITION, card.getDefinition());
         db.insert(TABLE_KISS_CARDS, null, values);
     }
 
-    public void updateCard(int id, String term, String defintion) {
+    public void saveCard(KissCard card) {
+        if (card.isNew()) {
+            insertCard(card);
+        } else {
+            updateCard(card);
+        }
+    }
+
+    public void updateCard(KissCard card) {
         db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(KEY_TERM, term);
-        values.put(KEY_DEFINITION, defintion);
+        values.put(KEY_TERM, card.getTerm());
+        values.put(KEY_DEFINITION, card.getDefinition());
         String where = KEY_ID + "=?";
-        db.update(TABLE_KISS_CARDS, values, where, new String[]{String.valueOf(id)});
+        db.update(TABLE_KISS_CARDS, values, where, new String[]{String.valueOf(card.getId())});
     }
 
     public void deleteCard(int id) {
@@ -91,4 +113,13 @@ public class DbHelper extends SQLiteOpenHelper {
         cursor.moveToFirst();
         return cursor.getInt(0);
     }
+
+    public int getCardPosition(KissCard card) {
+        String selectQuery = "SELECT  COUNT(*) FROM " + TABLE_KISS_CARDS + " WHERE " + KEY_ID + "< ?";
+        db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, new String[]{String.valueOf(card.getId())});
+        cursor.moveToFirst();
+        return cursor.getInt(0);
+    }
+
 }
