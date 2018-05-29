@@ -4,11 +4,12 @@ package net.qrolling.kisscard.activities;
  * Created by Quy Nguyen (nguyenledinhquy@gmail.com | https://github.com/quynguyenhcm) on 18/05/18.
  */
 
-import android.arch.lifecycle.Observer;
+import android.app.AlertDialog;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,15 +18,12 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import net.qrolling.kisscard.R;
 import net.qrolling.kisscard.dto.CardArrayAdaptor;
 import net.qrolling.kisscard.dto.KissCard;
 import net.qrolling.kisscard.viewmodel.CardListViewModel;
-
-import java.util.List;
 
 public class CardListActivity extends AppCompatActivity {
     private CardListViewModel mWordViewModel;
@@ -78,14 +76,47 @@ public class CardListActivity extends AppCompatActivity {
                     // When the use swipes a word,
                     // delete that word from the database.
                     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                        int position = viewHolder.getAdapterPosition();
-                        KissCard myCard = adapter.getCardAtPosition(position);
-                        Toast.makeText(CardListActivity.this,
-                                getString(R.string.delete_card_preamble) + " " +
-                                        myCard.getTerm(), Toast.LENGTH_LONG).show();
+                        int swipedPosition = viewHolder.getAdapterPosition();
+                        CardArrayAdaptor adapter = (CardArrayAdaptor) recyclerView.getAdapter();
+                        adapter.pendingRemoval(swipedPosition);
+                        final int position = viewHolder.getAdapterPosition();
+                        DialogInterface.OnClickListener dialogClickListener = getOnClickListener(position);
+                        confirmDelete(dialogClickListener);
+                    }
 
-                        // Delete the word
-                        mWordViewModel.deleteCard(myCard);
+                    private void confirmDelete(DialogInterface.OnClickListener dialogClickListener) {
+                        AlertDialog.Builder ab = new AlertDialog.Builder(CardListActivity.this);
+                        ab.setMessage(R.string.message_delete_confirmation)
+                                .setPositiveButton(R.string.message_yes, dialogClickListener)
+                                .setNegativeButton(R.string.message_no, dialogClickListener)
+                                .show();
+                    }
+
+                    @NonNull
+                    private DialogInterface.OnClickListener getOnClickListener(int position) {
+                        return new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int selection) {
+                                switch (selection) {
+                                    case DialogInterface.BUTTON_POSITIVE:
+                                        deleteCard();
+                                        break;
+                                    case DialogInterface.BUTTON_NEGATIVE:
+                                        recyclerView.getAdapter().notifyItemChanged(selection);
+                                        break;
+                                }
+                            }
+
+                            private void deleteCard() {
+                                KissCard myCard = adapter.getCardAtPosition(position);
+                                Toast.makeText(CardListActivity.this,
+                                        getString(R.string.delete_card_preamble) + " " +
+                                                myCard.getTerm(), Toast.LENGTH_LONG).show();
+
+                                // Delete the word
+                                mWordViewModel.deleteCard(myCard);
+                            }
+                        };
                     }
                 });
         // Attach the item touch helper to the recycler view

@@ -1,27 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/card_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
+    <!-- Swipe Layout-->
+    <include layout="@layout/removed_card_layout" />
 
-    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/card_term"
-        style="@style/text_view_style"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:elevation="8dp"
-        tools:text="placeholder text" ></TextView>
+    <!-- Regular Layout-->
+    <include layout="@layout/regular_card_row_layout" />
 
-    <TextView
-        android:id="@+id/card_definition"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
-</LinearLayout>
+</FrameLayout>
