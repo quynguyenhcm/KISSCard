@@ -1,8 +1,12 @@
 package net.qrolling.kisscard.dto;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 
 import java.util.Objects;
@@ -10,26 +14,34 @@ import java.util.Objects;
 /**
  * Created by Quy Nguyen (nguyenledinhquy@gmail.com | https://github.com/quynguyenhcm) on 18/05/18.
  */
-
+@Entity(tableName = "card_table")
 public class KissCard implements Parcelable {
+    @PrimaryKey(autoGenerate = true)
+    @NonNull
+    @ColumnInfo(name = "id")
     private int id;
+
+    @ColumnInfo(name = "term")
     private String term;
+
+    @ColumnInfo(name = "definition")
     private String definition;
     private static final int NEW_CARD_ID = -1;
 
     public KissCard() {
-        this(KissCard.NEW_CARD_ID, null, null);
+//        this(KissCard.NEW_CARD_ID, null, null);
     }
 
-    public KissCard(String term, String definition) {
-        this(KissCard.NEW_CARD_ID, term, definition);
-    }
-
-    public KissCard(int id, String term, String definition) {
-        this.id = id;
+    public KissCard(@NonNull String term, @NonNull String definition) {
         this.term = term;
         this.definition = definition;
     }
+//
+//    public KissCard(int id, @NonNull String term, @NonNull String definition) {
+//        this.id = id;
+//        this.term = term;
+//        this.definition = definition;
+//    }
 
     private KissCard(Parcel in) {
         id = in.readInt();
@@ -61,11 +73,12 @@ public class KissCard implements Parcelable {
         parcel.writeString(definition);
     }
 
+    @NonNull
     public int getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(@NonNull int id) {
         this.id = id;
     }
 

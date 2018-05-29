@@ -8,6 +8,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,29 +20,55 @@ import net.qrolling.kisscard.R;
 import net.qrolling.kisscard.dto.CardLisHolder;
 import net.qrolling.kisscard.dto.KissCard;
 
-public class ViewCardActivity extends DbInteractionActivity implements View.OnClickListener, View.OnTouchListener {
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
+public class ViewCardActivity extends AppCompatActivity implements View.OnClickListener, View.OnTouchListener {
     private GestureDetector gestureDetector;
+
+//    private final DbHelper dbHelper = new DbHelper(this);
 
     private int selectedPosition;
     private int listSize;
 
     private boolean isShowingDefintion;
 
-    private TextView txtCard, txtCount;
-    private Button btnUpdate, btnDelete;
+    @BindView(R.id.cardView)
+    TextView txtCard;
+
+    @BindView(R.id.txtCount)
+    TextView txtCount;
+
+    @BindView(R.id.btnUpdateCard)
+    Button btnUpdate;
+
+    @BindView(R.id.btnDelete)
+    Button btnDelete;
 
     private String definition;
     private String term;
     private Integer id;
     private KissCard card;
     private final CardLisHolder cardLisHolder = CardLisHolder.getInstance();
+//    CardViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_card_view);
+        ButterKnife.bind(this);
+
         gestureDetector = new GestureDetector(ViewCardActivity.this, new GestureListener());
-        card = getIntent().getParcelableExtra("card");
-        selectedPosition = getIntent().getIntExtra("selectedPosition", cardLisHolder.getIndex(card));
+//        viewModel = ViewModelProviders.of(this).get(CardViewModel.class);
+//        viewModel.init(id);
+//        viewModel.getCard().observe(this, (KissCard card) -> {
+//            selectedPosition = cardLisHolder.getIndex(viewModel.getCard().getValue());
+//        });
+
+
+//        card = getIntent().getParcelableExtra("card");
+//        selectedPosition = getIntent().getIntExtra("selectedPosition", cardLisHolder.getIndex(card));
         initialiseUIComponent();
         initialiseCardList();
         populateCard(selectedPosition);
@@ -50,16 +77,17 @@ public class ViewCardActivity extends DbInteractionActivity implements View.OnCl
 
     @Override
     public void onClick(View view) {
-        if (view.getId() == R.id.cardView) {
-            flipCard();
-        } else if (view.getId() == R.id.btnUpdateCard) {
-            startUpdateActivity();
-        } else if (view.getId() == R.id.btnDelete) {
-            confirmDelete();
-        }
+//        if (view.getId() == R.id.cardView) {
+//            flipCard();
+//        } else if (view.getId() == R.id.btnUpdateCard) {
+//            startUpdateActivity();
+//        } else if (view.getId() == R.id.btnDelete) {
+//            confirmDelete();
+//        }
     }
 
-    private void confirmDelete() {
+    @OnClick(R.id.btnDelete)
+    public void confirmDelete() {
         DialogInterface.OnClickListener dialogClickListener = getDeleteConfirmListener();
         AlertDialog.Builder ab = new AlertDialog.Builder(this);
         ab.setMessage(R.string.message_delete_confirmation)
@@ -88,10 +116,11 @@ public class ViewCardActivity extends DbInteractionActivity implements View.OnCl
     }
 
     private void deleteCardFromDatabase() {
-        getDb().deleteCard(id);
+//        dbHelper.deleteCard(id);
     }
 
-    private void startUpdateActivity() {
+    @OnClick(R.id.btnUpdateCard)
+    void startUpdateActivity() {
         Intent intent = new Intent(ViewCardActivity.this, AddCardActivity.class);
         intent.putExtra("card", cardLisHolder.getCards().get(selectedPosition));
         startActivity(intent);
@@ -100,6 +129,10 @@ public class ViewCardActivity extends DbInteractionActivity implements View.OnCl
 
     private void populateCard(int selectedPosition) {
         KissCard selectedCard = cardLisHolder.getCards().get(selectedPosition);
+        populateCard(selectedCard);
+    }
+
+    private void populateCard(KissCard selectedCard) {
         definition = selectedCard.getDefinition();
         term = selectedCard.getTerm();
         id = selectedCard.getId();
@@ -108,21 +141,18 @@ public class ViewCardActivity extends DbInteractionActivity implements View.OnCl
     }
 
     private void initialiseUIComponent() {
-        setContentView(R.layout.activity_card_view);
-        txtCard = findViewById(R.id.cardView);
+
         txtCard.setOnTouchListener(this);
+
         txtCard.setOnClickListener(this);
 
-        txtCount = findViewById(R.id.txtCount);
-
-        btnUpdate = findViewById(R.id.btnUpdateCard);
         btnUpdate.setOnClickListener(this);
 
-        btnDelete = findViewById(R.id.btnDelete);
         btnDelete.setOnClickListener(this);
     }
 
-    private void flipCard() {
+    @OnClick(R.id.cardView)
+    public void flipCard() {
         if (!isShowingDefintion) {
             txtCard.setText(definition);
         } else {

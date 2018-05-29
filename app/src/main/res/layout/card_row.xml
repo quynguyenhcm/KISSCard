@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/card_id"
@@ -11,14 +13,15 @@
 
     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/card_term"
-        android:layout_width="fill_parent"
+        style="@style/text_view_style"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:textSize="16sp"></TextView>
+        android:elevation="8dp"
+        tools:text="placeholder text" ></TextView>
 
     <TextView
         android:id="@+id/card_definition"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone" />
-</RelativeLayout>
+</LinearLayout>

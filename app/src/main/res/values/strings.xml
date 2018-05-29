@@ -20,6 +20,7 @@
     <string name="is_required"> %s is required</string>
     <string name="lbl_term"> Term</string>
     <string name="lbl_definition"> Definition</string>
+
     <string name="large_text">
         "Material is the metaphor.\n\n"
 
@@ -109,5 +110,10 @@
         "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
         "when a user tries to pick up one of cards.\n\n"
     </string>
+    <string name="no_word">No card available</string>
+    <string name="clear_all_data">Clear All Data</string>
+    <string name="delete_card_preamble">Deleting</string>
+    <string name="clear_data_toast_text">Clear the card list now</string>
+    <string name="empty_not_saved">Invalid card not saved</string>
 
 </resources>
