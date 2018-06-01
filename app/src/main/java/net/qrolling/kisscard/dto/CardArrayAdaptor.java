@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import net.qrolling.kisscard.R;
+import net.qrolling.kisscard.viewmodel.CardListViewModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -66,8 +67,6 @@ public class CardArrayAdaptor extends RecyclerView.Adapter<CardArrayAdaptor.Word
             // Covers the case of data not being ready yet.
             holder.term.setText(R.string.no_word);
         }
-
-
     }
 
     private void undoOpt(KissCard card) {
@@ -80,7 +79,7 @@ public class CardArrayAdaptor extends RecyclerView.Adapter<CardArrayAdaptor.Word
         notifyItemChanged(mCards.indexOf(card));
     }
 
-    public void pendingRemoval(int position) {
+    public void pendingRemoval(int position, CardListViewModel mCardViewModel) {
 
         final KissCard data = mCards.get(position);
         if (!itemsPendingRemoval.contains(data)) {
@@ -88,13 +87,13 @@ public class CardArrayAdaptor extends RecyclerView.Adapter<CardArrayAdaptor.Word
             // this will redraw row in "undo" state
             notifyItemChanged(position);
             // let's create, store and post a runnable to remove the data
-            Runnable pendingRemovalRunnable = () -> remove(mCards.indexOf(data));
+            Runnable pendingRemovalRunnable = () -> remove(mCards.indexOf(data), mCardViewModel);
             handler.postDelayed(pendingRemovalRunnable, PENDING_REMOVAL_TIMEOUT);
             pendingRunnables.put(data, pendingRemovalRunnable);
         }
     }
 
-    public void remove(int position) {
+    public void remove(int position, CardListViewModel mCardViewModel) {
         KissCard data = mCards.get(position);
         if (itemsPendingRemoval.contains(data)) {
             itemsPendingRemoval.remove(data);
@@ -103,6 +102,8 @@ public class CardArrayAdaptor extends RecyclerView.Adapter<CardArrayAdaptor.Word
             mCards.remove(position);
             notifyItemRemoved(position);
         }
+        mCardViewModel.deleteCard(data);
+        notifyItemChanged(position);
     }
 
     public boolean isPendingRemoval(int position) {
@@ -142,13 +143,13 @@ public class CardArrayAdaptor extends RecyclerView.Adapter<CardArrayAdaptor.Word
 
     class WordViewHolder extends RecyclerView.ViewHolder {
         //        @BindView(R.id.card_id)
-        private final TextView id;
+        TextView id;
 
         //        @BindView(R.id.card_term)
-        private final TextView term;
+        TextView term;
 
         //        @BindView(R.id.card_definition)
-        private final TextView defintion;
+        TextView defintion;
 
         public LinearLayout regularLayout;
         public LinearLayout swipeLayout;
@@ -160,10 +161,10 @@ public class CardArrayAdaptor extends RecyclerView.Adapter<CardArrayAdaptor.Word
             id = itemView.findViewById(R.id.card_id);
             term = itemView.findViewById(R.id.card_term);
             defintion = itemView.findViewById(R.id.card_definition);
-            regularLayout = (LinearLayout) itemView.findViewById(R.id.regularLayout);
-            listItem = (TextView) itemView.findViewById(R.id.list_item);
-            swipeLayout = (LinearLayout) itemView.findViewById(R.id.swipeLayout);
-            undo = (TextView) itemView.findViewById(R.id.undo);
+            regularLayout = itemView.findViewById(R.id.regularLayout);
+            listItem = itemView.findViewById(R.id.list_item);
+            swipeLayout = itemView.findViewById(R.id.swipeLayout);
+            undo = itemView.findViewById(R.id.undo);
         }
     }
 }

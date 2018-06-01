@@ -4,13 +4,11 @@ package net.qrolling.kisscard.activities;
  * Created by Quy Nguyen (nguyenledinhquy@gmail.com | https://github.com/quynguyenhcm) on 18/05/18.
  */
 
-import android.app.AlertDialog;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,12 +21,16 @@ import android.widget.Toast;
 import net.qrolling.kisscard.R;
 import net.qrolling.kisscard.dto.CardArrayAdaptor;
 import net.qrolling.kisscard.dto.KissCard;
+import net.qrolling.kisscard.utils.SwipeUtil;
 import net.qrolling.kisscard.viewmodel.CardListViewModel;
 
 public class CardListActivity extends AppCompatActivity {
-    private CardListViewModel mWordViewModel;
+    private CardListViewModel mCardViewModel;
 
     public static final int NEW_CARD_ACTIVITY_REQUEST_CODE = 1;
+    // Setup the RecyclerView
+    RecyclerView recyclerView;
+    CardArrayAdaptor adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,19 +40,20 @@ public class CardListActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         // Setup the RecyclerView
-        RecyclerView recyclerView = findViewById(R.id.recyclerview);
-        final CardArrayAdaptor adapter = new CardArrayAdaptor(this);
+        recyclerView = findViewById(R.id.recyclerview);
+        adapter = new CardArrayAdaptor(this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // Setup the WordViewModel
-        mWordViewModel = ViewModelProviders.of(this).get(CardListViewModel.class);
+        mCardViewModel = ViewModelProviders.of(this).get(CardListViewModel.class);
         // Get all the words from the database
         // and associate them to the adapter
-        mWordViewModel.getAllCards().observe(this, cards -> {
+        mCardViewModel.getAllCards().observe(this, cards -> {
             // Update the cached copy of the cards in the adapter.
             adapter.setCards(cards);
         });
+
 
         // Floating action button setup
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -58,69 +61,88 @@ public class CardListActivity extends AppCompatActivity {
             Intent intent = new Intent(CardListActivity.this, AddCardActivity.class);
             startActivityForResult(intent, NEW_CARD_ACTIVITY_REQUEST_CODE);
         });
+//
+//        new AlertDialog.Builder(YourActivity.this)
+//                .setMessage("Do you want to delete: \"" + mRecyclerViewAdapter.getItemAtPosition(itemPosition).getName() + "\"?")
+//                .setPositiveButton("Delete", (dialog, which) -> mYourActivityViewModel.removeItem(itemPosition))
+//                .setNegativeButton("Cancel", (dialog, which) -> mRecyclerViewAdapter.notifyItemChanged(itemPosition))
+//                .setOnCancelListener(dialogInterface -> mRecyclerViewAdapter.notifyItemChanged(itemPosition))
+//                .create().show();
 
         // Add the functionality to swipe items in the
         // recycler view to delete that item
-        ItemTouchHelper helper = new ItemTouchHelper(
-                new ItemTouchHelper.SimpleCallback(0,
-                        ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-                    @Override
-                    // We are not implementing onMove() in this app
-                    public boolean onMove(RecyclerView recyclerView,
-                                          RecyclerView.ViewHolder viewHolder,
-                                          RecyclerView.ViewHolder target) {
-                        return false;
-                    }
+//        ItemTouchHelper helper = new ItemTouchHelper(
+//                new ItemTouchHelper.SimpleCallback(0,
+//                        ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+//                    @Override
+//                    // We are not implementing onMove() in this app
+//                    public boolean onMove(RecyclerView recyclerView,
+//                                          RecyclerView.ViewHolder viewHolder,
+//                                          RecyclerView.ViewHolder target) {
+//                        return false;
+//                    }
+//
+//                    @Override
+//                    // When the use swipes a word,
+//                    // delete that word from the database.
+//                    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+//                        int swipedPosition = viewHolder.getAdapterPosition();
+//                        CardArrayAdaptor adapter = (CardArrayAdaptor) recyclerView.getAdapter();
+//                        adapter.pendingRemoval(swipedPosition);
+//                        final int position = viewHolder.getAdapterPosition();
+//                        DialogInterface.OnClickListener dialogClickListener = getOnClickListener(position);
+//                        confirmDelete(dialogClickListener);
+//                    }
+//
+//                    private void confirmDelete(DialogInterface.OnClickListener dialogClickListener) {
+//                        AlertDialog.Builder ab = new AlertDialog.Builder(CardListActivity.this);
+//                        ab.setMessage(R.string.message_delete_confirmation)
+//                                .setPositiveButton(R.string.message_yes, dialogClickListener)
+//                                .setNegativeButton(R.string.message_no, dialogClickListener)
+//                                .show();
+//                    }
+//
+//                    @NonNull
+//                    private DialogInterface.OnClickListener getOnClickListener(int position) {
+//                        return new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int selection) {
+//                                switch (selection) {
+//                                    case DialogInterface.BUTTON_POSITIVE:
+//                                        deleteCard();
+//                                        break;
+//                                    case DialogInterface.BUTTON_NEGATIVE:
+//                                        recyclerView.getAdapter().notifyItemChanged(selection);
+//                                        break;
+//                                }
+//                            }
+//
+//                            private void deleteCard() {
+//                                KissCard myCard = adapter.getCardAtPosition(position);
+//                                Toast.makeText(CardListActivity.this,
+//                                        getString(R.string.delete_card_preamble) + " " +
+//                                                myCard.getTerm(), Toast.LENGTH_LONG).show();
+//
+//                                // Delete the word
+//                                mCardViewModel.deleteCard(myCard);
+//                            }
+//                        };
+//                    }
+//                });
+//        // Attach the item touch helper to the recycler view
+//        helper.attachToRecyclerView(recyclerView);
+    }
 
-                    @Override
-                    // When the use swipes a word,
-                    // delete that word from the database.
-                    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                        int swipedPosition = viewHolder.getAdapterPosition();
-                        CardArrayAdaptor adapter = (CardArrayAdaptor) recyclerView.getAdapter();
-                        adapter.pendingRemoval(swipedPosition);
-                        final int position = viewHolder.getAdapterPosition();
-                        DialogInterface.OnClickListener dialogClickListener = getOnClickListener(position);
-                        confirmDelete(dialogClickListener);
-                    }
+    @Override
+    public void onResume() {
+        super.onResume();
+//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+//        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+//        recyclerView.setLayoutManager(linearLayoutManager);
+        adapter = new CardArrayAdaptor(this);
+        recyclerView.setAdapter(adapter);
 
-                    private void confirmDelete(DialogInterface.OnClickListener dialogClickListener) {
-                        AlertDialog.Builder ab = new AlertDialog.Builder(CardListActivity.this);
-                        ab.setMessage(R.string.message_delete_confirmation)
-                                .setPositiveButton(R.string.message_yes, dialogClickListener)
-                                .setNegativeButton(R.string.message_no, dialogClickListener)
-                                .show();
-                    }
-
-                    @NonNull
-                    private DialogInterface.OnClickListener getOnClickListener(int position) {
-                        return new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int selection) {
-                                switch (selection) {
-                                    case DialogInterface.BUTTON_POSITIVE:
-                                        deleteCard();
-                                        break;
-                                    case DialogInterface.BUTTON_NEGATIVE:
-                                        recyclerView.getAdapter().notifyItemChanged(selection);
-                                        break;
-                                }
-                            }
-
-                            private void deleteCard() {
-                                KissCard myCard = adapter.getCardAtPosition(position);
-                                Toast.makeText(CardListActivity.this,
-                                        getString(R.string.delete_card_preamble) + " " +
-                                                myCard.getTerm(), Toast.LENGTH_LONG).show();
-
-                                // Delete the word
-                                mWordViewModel.deleteCard(myCard);
-                            }
-                        };
-                    }
-                });
-        // Attach the item touch helper to the recycler view
-        helper.attachToRecyclerView(recyclerView);
+        setSwipeForRecyclerView();
     }
 
     @Override
@@ -144,7 +166,7 @@ public class CardListActivity extends AppCompatActivity {
             Toast.makeText(this, R.string.clear_data_toast_text, Toast.LENGTH_LONG).show();
 
             // Delete the existing data
-            mWordViewModel.deleteAll();
+            mCardViewModel.deleteAll();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -166,10 +188,41 @@ public class CardListActivity extends AppCompatActivity {
         if (requestCode == NEW_CARD_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
             KissCard card = (KissCard) data.getParcelableExtra(AddCardActivity.EXTRA_REPLY);
             // Save the data
-            mWordViewModel.insert(card);
+            mCardViewModel.insert(card);
         } else {
             Toast.makeText(
                     this, R.string.empty_not_saved, Toast.LENGTH_LONG).show();
         }
+    }
+
+    private void setSwipeForRecyclerView() {
+
+        SwipeUtil swipeHelper = new SwipeUtil(0, ItemTouchHelper.LEFT, CardListActivity.this) {
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                int swipedPosition = viewHolder.getAdapterPosition();
+                CardArrayAdaptor adapter = (CardArrayAdaptor) recyclerView.getAdapter();
+                adapter.pendingRemoval(swipedPosition, mCardViewModel);
+            }
+
+            @Override
+            public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                int position = viewHolder.getAdapterPosition();
+                CardArrayAdaptor adapter = (CardArrayAdaptor) recyclerView.getAdapter();
+                if (adapter.isPendingRemoval(position)) {
+                    return 0;
+                }
+                return super.getSwipeDirs(recyclerView, viewHolder);
+            }
+        };
+
+        ItemTouchHelper mItemTouchHelper = new ItemTouchHelper(swipeHelper);
+        mItemTouchHelper.attachToRecyclerView(recyclerView);
+
+        //set swipe label
+        swipeHelper.setLeftSwipeLable("Archive");
+        //set swipe background-Color
+        swipeHelper.setLeftcolorCode(ContextCompat.getColor(CardListActivity.this, R.color.colorPrimary));
+
     }
 }

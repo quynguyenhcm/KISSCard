@@ -3,7 +3,7 @@
     android:id="@+id/swipeLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorPrimaryLight"
+    android:background="@color/colorAccent"
     android:orientation="horizontal"
     android:visibility="visible"
     android:weightSum="3">
