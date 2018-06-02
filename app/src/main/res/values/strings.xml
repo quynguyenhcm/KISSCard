@@ -14,8 +14,8 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_card_view">cardView</string>
     <string name="message_delete_confirmation">Are you sure you want to delete?</string>
-    <string name="message_yes">Yes</string>
-    <string name="message_no">No</string>
+    <string name="message_delete">DELETE</string>
+    <string name="message_cancel">CANCEL</string>
     <string name="no_more_card_to_show">No more card to show</string>
     <string name="is_required"> %s is required</string>
     <string name="lbl_term"> Term</string>
@@ -114,6 +114,8 @@
     <string name="clear_all_data">Clear All Data</string>
     <string name="delete_card_preamble">Deleting</string>
     <string name="clear_data_toast_text">Clear the card list now</string>
+    <string name="clear_data_toast_text_confirm">Are you sure you want to CLEAR all data?</string>
+    <string name="clear_data_toast_text_cancel">User Cancelled</string>
     <string name="empty_not_saved">Invalid card not saved</string>
     <string name="archived_label">Removed</string>
     <string name="undo_label">Undo</string>

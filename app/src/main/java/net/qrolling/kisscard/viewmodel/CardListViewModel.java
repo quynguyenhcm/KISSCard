@@ -23,7 +23,7 @@ public class CardListViewModel extends AndroidViewModel {
         cards = mRepository.allCards();
     }
 
-    private void loadCards() {
+    public void loadCards() {
         cards = mRepository.allCards();
         // Do an asynchronous operation to fetch cards.
     }

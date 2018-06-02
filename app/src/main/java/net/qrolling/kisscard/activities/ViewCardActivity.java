@@ -91,8 +91,8 @@ public class ViewCardActivity extends AppCompatActivity implements View.OnClickL
         DialogInterface.OnClickListener dialogClickListener = getDeleteConfirmListener();
         AlertDialog.Builder ab = new AlertDialog.Builder(this);
         ab.setMessage(R.string.message_delete_confirmation)
-                .setPositiveButton(R.string.message_yes, dialogClickListener)
-                .setNegativeButton(R.string.message_no, dialogClickListener)
+                .setPositiveButton(R.string.message_delete, dialogClickListener)
+                .setNegativeButton(R.string.message_cancel, dialogClickListener)
                 .show();
     }
 
