@@ -24,6 +24,7 @@ public class CardListViewModel extends AndroidViewModel {
     }
 
     private void loadCards() {
+        cards = mRepository.allCards();
         // Do an asynchronous operation to fetch cards.
     }
 
@@ -45,5 +46,6 @@ public class CardListViewModel extends AndroidViewModel {
 
     public void deleteCard(KissCard card) {
         mRepository.deleteKissCard(card);
+        cards.getValue().remove(card);
     }
 }
