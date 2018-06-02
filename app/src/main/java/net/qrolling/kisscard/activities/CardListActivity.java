@@ -118,7 +118,7 @@ public class CardListActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == NEW_CARD_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
-            KissCard card = (KissCard) data.getParcelableExtra(AddCardActivity.EXTRA_REPLY);
+            KissCard card = data.getParcelableExtra(AddCardActivity.EXTRA_REPLY);
             // Save the data
             mCardViewModel.insert(card);
         } else {
@@ -152,9 +152,9 @@ public class CardListActivity extends AppCompatActivity {
         mItemTouchHelper.attachToRecyclerView(recyclerView);
 
         //set swipe label
-        swipeHelper.setLeftSwipeLable("Archive");
+        swipeHelper.setLeftSwipeLable(getResources().getString(R.string.archived_label));
         //set swipe background-Color
-        swipeHelper.setLeftcolorCode(ContextCompat.getColor(CardListActivity.this, R.color.colorPrimary));
+        swipeHelper.setLeftcolorCode(ContextCompat.getColor(CardListActivity.this, R.color.colorPrimaryDark));
 
     }
 }
