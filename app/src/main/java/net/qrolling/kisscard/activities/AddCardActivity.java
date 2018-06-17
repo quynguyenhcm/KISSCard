@@ -47,11 +47,12 @@ public class AddCardActivity extends DbInteractionActivity implements View.OnCli
     public void onClick(View v) {
         if (v.getId() == R.id.btnSave) {
             updateCardFromView();
-            saveCard();
-            if (card.isNew()) {
-                showCardList();
-            } else {
-                showCard(card);
+            if (saveCard()) {
+                if (card.isNew()) {
+                    showCardList();
+                } else {
+                    showCard(card);
+                }
             }
         } else if (v.getId() == R.id.btnCancel) {
             cancel();
@@ -78,11 +79,13 @@ public class AddCardActivity extends DbInteractionActivity implements View.OnCli
         startActivity(intent);
     }
 
-    private void saveCard() {
+    private boolean saveCard() {
         if (isValidCard()) {
             saveCardToDb();
             refreshCardHolder();
+            return true;
         }
+        return false;
     }
 
     private void refreshCardHolder() {

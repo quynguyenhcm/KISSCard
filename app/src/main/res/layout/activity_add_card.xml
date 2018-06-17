@@ -28,6 +28,7 @@
         android:gravity="top"
         android:layout_alignParentLeft="true" />
 
+
     <Button
         android:id="@+id/btnSave"
         android:layout_width="wrap_content"
@@ -45,8 +46,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="56dp"
-        android:text="@string/str_save_and_add_another"
+        android:layout_marginEnd="55dp"
+        android:text="@string/str_cancel"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="56dp" />
+        android:layout_marginRight="55dp" />
+
 </RelativeLayout>

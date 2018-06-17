@@ -11,8 +11,8 @@
     <string name="str_hint_term">Enter Term</string>
     <string name="str_hint_definition">Enter definition</string>
     <string name="title_activity_result">Results!!!</string>
-    <string name="title_activity_main">MainActivity</string>
-    <string name="title_activity_card_view">cardView</string>
+    <string name="title_activity_main">KISS Card</string>
+    <string name="title_activity_card_view">Happy Learning</string>
     <string name="message_delete_confirmation">Are you sure you want to delete?</string>
     <string name="message_yes">Yes</string>
     <string name="message_no">No</string>
@@ -109,5 +109,6 @@
         "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
         "when a user tries to pick up one of cards.\n\n"
     </string>
+    <string name="str_cancel">Cancel</string>
 
 </resources>
